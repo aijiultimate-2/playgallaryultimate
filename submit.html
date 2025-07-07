@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>www.playgallaryultimate.com</title>
+        <style>
+            body{
+                background-color: 
+             rgb(34, 32, 32);}
+.side-bar{
+            background-color:black;
+            position: fixed;
+            left: 0;
+            bottom: 0;
+            top: 0;
+            width: 300px;
+            object-fit: contain;
+            object-position: ;
+            border-style: solid;}
+            .side-bars{
+                background-color:black;
+            position: fixed;
+            right: 0;
+            bottom: 0;
+            top: 0;
+            width: 220px;
+            object-fit: contain;
+            object-position: ;
+            border-style: solid;}
+            
+            .G-button{margin-top: 250px;
+
+background-color:  rgb(195, 43, 226);
+height: 250px;
+width: 250px;
+border: none;
+border-radius: 20px;
+color: beige;
+
+font-size: 150px;
+margin-left: 20px;
+box-shadow: 3px 3px 3px gainsboro;}
+.video{
+    margin-top: 220px;
+    margin-left: 20px;
+    color:beige;
+}.submit{
+    margin-left: 100px;
+                margin-top: 30px;
+                height: 50px;
+                width: 100px;
+                background-color: orange;
+                border: none;
+                border-radius: 9px;
+                font-size: large;
+                color: beige;
+                cursor: pointer;
+                transition: transfom 0.3s ;
+                box-shadow: 3px 3px 3px gainsboro;
+                margin-left: 20px;
+}.submit:hover{
+                background-color: blueviolet;
+                
+             transform: translateY(-10px);}
+             .video-gallary{
+                margin-left: 100px;
+                margin-top: 30px;
+                height: 50px;
+                width: 100px;
+                background-color: orange;
+                border: none;
+                border-radius: 9px;
+                font-size: bold;
+                color: beige;
+                cursor: pointer;
+                transition: transfom 0.3s ;
+                box-shadow: 3px 3px 3px gainsboro;
+                margin-left: 35px;
+             }.video-gallary:hover{
+                background-color: blueviolet;
+                
+             transform: translateY(-10px);}
+             .id{
+                margin-left: 340px;
+                margin-top: 80px;
+             }.a{
+                color: beige;
+                font-size: large;
+             }
+        </style>
+
+    </head>
+    <body>
+        <div class="side-bar">
+            <button class="G-button">G</button>
+          </div>  
+          <div class="side-bars">
+
+            <div class="video" >
+                <input type="file" id="videofile" accept="videos/*">
+                    <button class="submit" type="submit" id="upload-video">
+                        upload video
+                    </button>
+                </form>
+            </div>
+            <button class="video-gallary"><li>
+                <a class="a" href="video-gallary.html">video-gallary</a>
+                </li>
+            </button>
+          </div>
+        </div>
+        <div id="videoContainer">
+            <video class="id" id="upload-video"video="play" width="55%"height="70%"controls></video>
+
+        </div>
+
+    </body>
+    <script>
+const videofileinput = document.getElementsByid(videofile)
+const uploadbutton = document.getElementById('uploadbutton')
+uploadbutton.addEventListener('click',async()=
+const file=videofileinput.files[0]
+const formData=new formData();
+formData = new formData();
+formData.append('video,file');
+try{
+    const Response =await fetch('/upload-video',{
+        method:'post'
+        
+    })
+const videourl =await Response.json();
+console.log(videourl);
+}catch(error){console.error(error);}
+
+);
+//check payment status and update video visibility
+fetch('/check-payment-status? video id=(video id)user id(user id)')
+.then (responce=>responce.json())
+.than(data=>(of, data, visbility==="paid"))
+//show video}
+
+    </script>
+</html>

@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>www.playgallaryultimate</title>
+        
+        <style>
+            body{
+                background-color: black;
+            }.G-button{margin-top: 250px;
+
+background-color:  rgb(195, 43, 226);
+height: 250px;
+width: 250px;
+border: none;
+border-radius: 20px;
+color: beige;
+
+font-size: 150px;
+margin-left: 20px;
+box-shadow: 3px 3px 3px gainsboro;
+         }
+
+            
+            .log-in{
+                margin-top: 250px;
+                margin-left: 450px;
+            }.usernamebar{
+                height:45px ;
+                margin-left: 30px;
+                width: 500px;
+                border-radius: 15px; 
+                border-color:beige;
+                background-color:  rgb(31, 28, 28);
+                color: beige;
+                font-size: large;box-shadow:3px 3px 3px ghostwhite ;
+            }.usernamebar::placeholder{
+                font-size: large;
+                font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif; 
+                color: beige;
+            }.passwordbar{height:45px ;
+                width: 500px;
+                border-radius: 15px; 
+                border-color:beige;
+                background-color:  rgb(31, 28, 28);
+                color: beige;
+                font-size: large;box-shadow:3px 3px 3px ghostwhite ;
+
+            }.passwordbar::placeholder{font-size: large;
+                font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif; 
+                color: beige;
+
+            }.username{
+                color: beige;
+            }.password{
+                color: beige;
+            }.submit-button{
+                margin-left: 100px;
+                margin-top: 20px;
+                height: 50px;
+                width: 100px;
+                background-color: orange;
+                border: none;
+                border-radius: 9px;
+                font-size: bold;
+                color: beige;
+                cursor: pointer;
+                transition: transfom 0.3s ;
+                box-shadow: 3px 3px 3px gainsboro;
+
+               
+            }.B{
+                color: beige;
+            }@media(max-width:500px){
+    .G-button{
+        display: none;
+    }.side-bar{
+        display: none;
+    }.side-bars{
+        display: none;
+    }.passwordbar{margin-left: 25px;
+    width: 300px;}
+    .usernamebar{width: 300px;
+}}
+            
+            
+            .submit-button:hover{
+                background-color: blueviolet;
+                
+             transform: translateY(-10px);
+        }
+        .side-bar{
+            background-color: rgb(31, 28, 28);
+            position: fixed;
+            left: 0;
+            bottom: 0;
+            top: 0;
+            width: 290px;}
+
+            .side-bars{
+            background-color: rgb(22, 21, 21);
+            position: fixed;
+            right: 0;
+            bottom: 0;
+            top: 0;
+            width: 100px;}
+
+
+
+
+
+
+            .r{
+                color: beige;
+                font-size: large;
+            }.L{
+                color: beige;
+                margin-left: 500px;
+            }
+
+        </style>
+
+    </head>
+    <body>
+       <h1 class="L">LOGIN</h1> 
+        <div>
+            <div class="side-bars"></div>
+            <div class="side-bar">
+                <button class="G-button">G</button> 
+            </div>
+            <form class="log-in" action="/login" method="post">
+                <label class="username" for="USERNAME">
+                    <b>
+                        EMAIL:
+                    </b>
+                </label>
+                <input class="usernamebar" type="text" name="email" placeholder="email" id="email"><br><br>
+                <label class="password" for=" password" placeholder=" password">
+                    <b>
+                        PASSWORD:
+                    </b>
+                </label> 
+                <input class="passwordbar" type="text" name="password" placeholder="password" id="password"><br><br>
+            <button class="submit-button" id="submit">
+                <li>
+                <a class="r"  href="submit.html"><b>SUBMIT</b></a>
+                </li>
+            </button>
+                
+            </form>
+            <script>
+                app.const('/login' , async(req.res) = 
+                { const:user, await: user,findone({email}),
+            if(!user) {
+                return res.status(401).send({message:'invalid emil or password'})
+
+            },
+            const :isvalidpassword = await bcrypt.compare(password.user.password),
+            if (isvalidpassword){
+                return res .status(401).send({message:'invalid email or password'})
+               res.send('//authenticate user')
+               req.seccion.user=user;
+               res.send('logged in successfuly;') 
+
+            },
+            const: token =jwt.sign({userid:user._id},process.evn.secreet_key,{
+                expiresin:'1h',
+            }),
+            res:send({token})
+            })
+            </script>
+        </div>
+    </body>
+</html>

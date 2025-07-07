@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>www.playgallaryultimate.com</title>
+    
+    <style>
+.h{
+    color: beige;
+    top: 0;
+    margin-left: 200px;
+    position: fixed;
+}body{
+    background-color: black;
+} .side-bar{
+            background-color: rgb(22, 21, 21);
+            position: fixed;
+            left: 0;
+            bottom: 0;
+            top: 0;
+            width: 290px;}
+            
+            .side-bars{
+            background-color: rgb(22, 21, 21);
+            position: fixed;
+            right: 0;
+            bottom: 0;
+            top: 0;
+            width: 100px;}  
+           
+            
+        @media (max-width:500px) {.container{
+width: 50%;
+padding: 10px;
+display: flex;
+
+            }.s{
+                display: flex;
+                object-fit: contain;
+                align-items: center;
+                width: 7px;
+            }.emailbar{
+                width: 20px;
+            }.passwordbar{
+                width: 20px;
+
+            }.usernamebar{
+                width: 20px;
+            }.o{
+                width: 20px;
+            }.side-bars{
+                background-color: transparent;
+                width: 0;
+            }.h{
+                display: none;
+            }.G-button{
+                display: none;
+                
+            
+            background-color:  rgb(195, 43, 226);
+            height: 60px;
+            width: 60px;
+            border: none;
+            border-radius: 7px;
+            color: beige;
+            font-size: bold;
+            font-size: 40px;
+        
+    
+            box-shadow: 3px 3px 3px gainsboro;
+            margin-top: 200px;
+
+            }.side-bar{
+                display: none;
+            }
+            }
+        
+   
+            
+            
+            
+            
+            .G-button{align-items: center;
+                margin-top: 220px;
+
+                background-color:  rgb(195, 43, 226);
+            height: 250px;
+            width: 250px;
+            border: none;
+            border-radius: 20px;
+            color: beige;
+            
+            font-size: 150px;
+            margin-left: 20px;
+            box-shadow: 3px 3px 3px gainsboro;
+            } .emailbar{
+        height: 45px;
+        width: 500px;
+        border-radius: 15px;
+        margin-left: 55px;
+        border-color: beige;
+        background-color:  rgb(31, 28, 28);
+        color: beige;
+        font-size: large;box-shadow:3px 3px 3px ghostwhite ;
+        
+    }.emailbar::placeholder{
+        color: beige;
+        font-size: 20px;
+        font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    } 
+    .email{
+        
+        color: beige;
+        font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    }.usernamebar{
+        height: 45px;
+        width: 500px;
+        border-radius:15px ;
+        margin-left:20px ;
+        border-color:beige;
+        background-color:  rgb(31, 28, 28);
+        font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+        color: beige;font-size: large;box-shadow:3px 3px 3px ghostwhite ;
+    }.usernamebar::placeholder{
+        color: beige;
+    
+        font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    
+    }
+    .username{
+        color:beige;
+        
+    }.o{
+    
+        height: 45px;
+        width: 500px;
+        border-radius:15px ;
+        margin-left:100px ;
+        border-color:beige;
+        background-color:  rgb(31, 28, 28);
+        font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+        color: beige;
+        font-size: large;box-shadow:3px 3px 3px ghostwhite ;
+    }
+    
+    .o::placeholder{
+        color: beige;
+        font-size: 20px;
+        font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    }
+
+
+
+.passwordbar{height:45px ;
+                width: 500px;
+                border-radius: 15px; 
+                border-color:beige;
+                background-color:  rgb(31, 28, 28);
+                font-size: large;
+                margin-left: 55px;
+                color: beige;box-shadow:3px 3px 3px ghostwhite ;
+
+
+            }.passwordbar::placeholder{font-size: large;
+                font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif; 
+                color: beige;
+
+            }.password{
+                color: beige;
+
+            }
+            .s{
+                margin-left: 200px;
+                margin-top: 200px;
+            }.submit{
+                margin-left: 100px;
+                margin-top: 20px;
+                height: 50px;
+                width: 100px;
+                background-color: orange;
+                border: none;
+                border-radius: 9px;
+                font-size: bold;
+                color: beige;
+                cursor: pointer;
+                transition: transfom 0.3s ;
+                box-shadow: 3px 3px 3px gainsboro;
+
+               
+            }
+
+            .submit:hover{
+                background-color: blueviolet;
+                
+             transform: translateY(-10px);
+        }
+        
+
+
+
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="side-bars"></div>
+        <div class="side-bar">
+            <button class="G-button">G</button>
+        </div>
+        <div class="h">
+       <h1 class="h">secure payment</h1>
+        </div>
+       <div class="s">
+       <form class="s" action="make payment" id="payment-form"> <label class="username">
+        <b>
+            CARD NUMBER
+        </b></label>
+        <input class="usernamebar" type="text"  placeholder="card number" id="card numbers"required>:<br><br>
+        <label class="email"><b>EXP-MONTH</b></label>
+        <input class="emailbar"  placeholder="exp-month" id="exp-month"><br><br>
+        <label class="password" for=" password" placeholder=" exp-year" id="exp-year"required>
+            <b>
+                EXP-YEAR
+            </b>
+        </label> 
+        <input class="passwordbar" type="text"  placeholder="exp-year"><br><br>
+        <label class="password"  placeholder=" exp-year" id="exp-year"required>
+            <b>
+                CVC
+            </b>
+        </label> 
+        <input class="o" type="text"  placeholder="cvc" id="cvc" required><br><br>
+    <button class="submit" id="pay-button"><b>pay now</b></button>
+    
+       </form> 
+       </div> 
+    </div>
+    <script>
+    const stripe =stripe('secret');
+    stip.createtoken('bank',{country
+    :'us',
+currency:'u.s.d',
+accontnumber:'000',
+accontholdername:'g',
+accontholdertype:'company'
+}). then(function(result) {
+if(result.error) {//handle error} else{
+const bankaccounttoken = result.token.id;
+}
+})
+
+
+</script>
+<script>
+    const strip = stripe();
+    const paymentform = document.getElementById('payment-form');
+    const paybutton = document.getElementById('pay-button');
+    paybutton = addEventListener('click',async(e) = {
+        e.preventDefult(),
+        const :cardNumber = document.getElementById('card-number') , value,
+        const :exp-month , document.getElementById('exp-month') ,value,
+        const: exp-year , document.getElementById('exp-year') ,value,
+        try:{
+            const :paymentmethod = await strip.createpaymentmethod{{
+                type:'card',
+                card: {
+                    number:cardnumber,
+                    exp_month:parseInt(exp_month),
+                    exp_year:parseInt(exp_year),
+                    cvc:cvc,
+
+
+                }
+
+            },}
+    }
+    });
+    if(paymentmethod.error) {
+        console.error;{paymentmethod.error};
+    }
+</script>
+</body>
+</html>

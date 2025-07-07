@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>www.playgallaryultimate</title>
+        <style>
+            body{background-color: rgb(31, 28, 28);
+        
+                
+            }.G-button{align-items: center;
+                margin-top: 220px;
+
+                background-color:  rgb(195, 43, 226);
+            height: 250px;
+            width: 250px;
+            border: none;
+            border-radius: 20px;
+            color: beige;
+            
+            font-size: 150px;
+            margin-left: 20px;
+            box-shadow: 3px 3px 3px gainsboro;
+            }
+            .register{
+                margin-top: 220px;
+                margin-left:450px ;
+            }@media (max-width:500px) {.container{
+width: 100%;
+padding: 10px;
+            }.register{
+                max-width: 490px;
+            }
+        }
+
+    .emailbar{
+        height: 45px;
+        width: 500px;
+        border-radius: 15px;
+        margin-left: 55px;
+        border-color: beige;
+        background-color:  rgb(31, 28, 28);
+        color: beige;box-shadow:3px 3px 3px ghostwhite ;
+
+        
+    }.emailbar::placeholder{
+        color: beige;
+        font-size: 20px;
+        font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    } 
+    .email{
+        margin-left:10px;
+        color: beige;
+        font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    }.usernamebar{
+        height: 45px;
+        width: 500px;
+        border-radius:15px ;
+        margin-left:20px ;
+        border-color:beige;
+        background-color:  rgb(31, 28, 28);
+        font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+        color: beige;box-shadow:3px 3px 3px ghostwhite ;
+
+    }.usernamebar::placeholder{
+        color: beige;
+        font-size: 20px;
+        font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    }
+    .username{
+        color: beige;
+        
+    }
+    
+
+
+
+
+.passwordbar{height:45px ;
+                width: 500px;
+                border-radius: 15px; 
+                border-color:beige;
+                background-color:  rgb(31, 28, 28);
+                font-size: large;
+                margin-left: 20px;
+                color: beige;
+                box-shadow:3px 3px 3px ghostwhite ;
+
+            }.passwordbar::placeholder{font-size: large;
+                font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif; 
+                color: beige;
+
+            }.password{
+                color: beige;
+            }
+
+
+
+
+
+
+
+
+    .post{
+        color: beige;
+    }.content{
+        color: beige;
+    }.inpost{
+        color:beige ;
+    
+    }.link {
+        margin-left: 500px;
+        color: orange;
+    }    
+        
+    
+        .side-bar{
+            background-color: rgb(22, 21, 21);
+            position: fixed;
+            left: 0;
+            bottom: 0;
+            top: 0;
+            width: 290px;}
+
+            .side-bars{
+            background-color: rgb(22, 21, 21);
+            position: fixed;
+            right: 0;
+            bottom: 0;
+            top: 0;
+            width: 100px;}
+
+
+        </style>
+    </head>
+        <body>
+          <div class="container">
+            <div>
+                <div class="left-section">
+                  <div class="side-bar">
+                    <button class="G-button">G</button>
+                  </div>  
+                </div>
+                <div class="middle-section">
+                    <form class="register" action="/register" method="post">
+                        <label class="username">
+                            <b>
+                                USERNAME:
+                            </b></label>
+                            <input class="usernamebar" type="text" name="username" placeholder="username" id="username">:<br><br>
+                            <label class="email"><b>EMAIL:</b></label>
+                            <input class="emailbar" type="EMAIL" placeholder="email" id="email"><br><br>
+                            <label class="password" for=" password" placeholder=" password" id="password">
+                                <b>
+                                    PASSWORD:
+                                </b>
+                            </label> 
+                            <input class="passwordbar" type="text" name="password" placeholder="password"><br><br>
+
+                            <strong>
+                                <div class="inpost">
+                            {% for post inpost%}</div>
+                            <h2 class="post">
+                                {{post.title}}
+                                                      </h2>
+                                <p class="content">{{
+                                    post.content
+                                }}
+                                    </p>
+                        
+                                </strong>
+                        
+                        
+                        
+                        </form><div class="link">
+                        <li class="make payment">
+                            <a class="make payment" href="make payment.html">
+<b> make payment</b>
+                            </a>
+                        </li>
+                    </div>
+                    </div>
+                    <div class="right-section">
+                        <div class="side-bars"></div>
+                    </div>
+                </div>
+
+          </div> 
+            
+          <script>
+const express=reqire('expression');
+const app=express('bcrypt');
+const mongoose=reqire('mongoose');
+// connect to database
+mongoose: connect ('mongoose';
+const user, schema=new mongoose .schema({
+ us,
+ username:String,
+ email:String,
+ password:String  
+})
+user: schimer, pre ('//local host/userDB.'{use :New ,url ,passer:true,use, unifitopology:true});
+//Define user schema
+constuser-new mongoose.schema({
+    username:String,
+    email:String,
+    password:String
+});
+//hash password before saving
+user: schema.pre('save',async function(next)
+{
+    const user=this
+    user.password=await bcrypt.hash
+    (user.password, 10);next();
+}
+)
+constuser=mongoose;model(
+    //creat user model.constuser=mongoose;model
+    ('user', userschema),
+    app.post('//creat account route',
+    app.post('/creat account'),
+    async (req,res)=>{
+        const{username,email,password}
+    }
+))
+try{
+  await user.save();
+  res.send('account created succesfuuly;')  
+}
+catch(error){
+    res.status(400),send('error creating account')
+}
+);
+          </script>
+        </body>
+    
+</html>

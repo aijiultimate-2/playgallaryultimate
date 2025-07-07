@@ -1,0 +1,21 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="video" >
+        <form action="/video.upload " method="post" enctype="multipart/form-data">
+            <input class="video" type="file" id="video file" name="videofile" account="video/*">
+            <b utton class="submit" type="submit">
+                upload video
+            </button>
+        </form>
+    </div>
