@@ -2,6 +2,9 @@
 import os
 from flask import Flask, jsonify, request, send_from_directory
 
+# Get the environment variable (returns None if not set)
+MY_API_2 = os.environ.get('MY_API_2')
+print("MY_API_2:", MY_API_2)  # Optional: remove or keep for debugging
 
 app = Flask(__name__, static_folder=None)
 
