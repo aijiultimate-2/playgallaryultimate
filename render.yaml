@@ -1,0 +1,12 @@
+
+services:
+- type: web
+name: my python API
+ENV: PYTHON
+build: command
+start: command
+plan: free
+branch: main
+buildCommand: pip install -r requirement.txt
+startCommand:            :app
+autoDeploy: true

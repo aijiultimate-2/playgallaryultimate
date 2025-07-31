@@ -2,7 +2,7 @@
 <html>
     <head>
         <title>www.playgallaryultimate</title>
-        
+        <a href="app.py"></a>
         <style>
             body{
                 background-color: black;
@@ -57,7 +57,7 @@ box-shadow: 3px 3px 3px gainsboro;
                 margin-left: 100px;
                 margin-top: 20px;
                 height: 50px;
-                width: 100px;
+                width: 480px;
                 background-color: orange;
                 border: none;
                 border-radius: 9px;
@@ -158,8 +158,8 @@ box-shadow: 3px 3px 3px gainsboro;
             if (isvalidpassword){
                 return res .status(401).send({message:'invalid email or password'})
                res.send('//authenticate user')
-               req.seccion.user=user;
-               res.send('logged in successfuly;') 
+               req.section.user=user;
+               res.send('logged in successfully;') 
 
             },
             const: token =jwt.sign({userid:user._id},process.evn.secreet_key,{

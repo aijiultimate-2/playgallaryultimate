@@ -1,9 +1,11 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>www.playgallaryultimate.com</title>
+        <title>www.playgallaryultimate</title>
+        <a href="app.py"></a>
         <style>
          body{background-color: rgb(31, 28, 28);
+            display: inline-flex;
         
                 
     }.G-button{align-items: center;
@@ -19,14 +21,27 @@
     font-size: 150px;
     margin-left: 20px;
     box-shadow: 3px 3px 3px gainsboro;
+    }  @media (max-width:500px) {.container{
+width: 100%;
+padding: 10px;
     }
+}
 
 
     @media(max-width: 500px){
     .container{
         display: flex;
         max-width: 500px;
-        object-fit: contain;
+        
+        display: flex;
+    }.side-bar{
+        display: none;
+        background-color: transparent;
+    }.G-button{
+        display: none;
+    }.side-bars{
+        display: none;
+        background-color: transparent;
     }
 
         }
@@ -40,7 +55,8 @@
     left: 0;
     bottom: 0;
     top: 0;
-    width: 290px;}
+    width: 290px;
+display: flex;}
 
     .side-bars{
     background-color: rgb(22, 21, 21);
@@ -48,6 +64,7 @@
     right: 0;
     bottom: 0;
     top: 0;
+    display: flex;
     width: 100px;}
     .h{
         margin-left: 500px;
@@ -59,6 +76,7 @@
         top: 0;
         left: 0;
         right: 0;
+        display: inline-flex;
     }.p{
         
         padding: 50px;
@@ -73,7 +91,7 @@
     </head>
     <body>
         
-        <div class="container">
+       
             <div>
                 <div class="left-section">
                   <div class="side-bar">
@@ -83,6 +101,7 @@
                     <h1 class="h">About playgallaryultimate.COM</h1>
                   </div> 
                 </div>
+                 <div class="container"></div>
                 <div class="middle-section">
                   
                    

@@ -2,6 +2,7 @@
 <html>
     <head>
         <title>www.playgallaryultimate</title>
+        <a href="app.py"></a>
         <style>
             body{background-color: rgb(31, 28, 28);
         
@@ -29,7 +30,62 @@ padding: 10px;
             }.register{
                 max-width: 490px;
             }
-        }
+        }     
+        @media (max-width:500px) {.container{
+width: 50%;
+padding: 10px;
+display: flex;
+
+            }.register{
+                display: flex;
+                object-fit: contain;
+                align-items: center;
+                width: 7px;
+            }.emailbar{
+                width: 20px;
+                display: flex;
+            }.passwordbar{
+                width: 20px;
+                display: flex;
+
+            }.usernamebar{
+                width: 20px;
+                display: flex;
+            }.o{
+                width: 20px;
+            }.side-bars{
+                background-color: transparent;
+                display: flex;
+                width: 0;
+            }.h{
+                display: none;
+            }.G-button{
+                display: none;
+                
+            
+            background-color:  rgb(195, 43, 226);
+            height: 60px;
+            width: 60px;
+            border: none;
+            border-radius: 7px;
+            color: beige;
+            font-size: bold;
+            font-size: 40px;
+        
+    
+            box-shadow: 3px 3px 3px gainsboro;
+            margin-top: 200px;
+
+            }.side-bar{
+                display: none;
+            }.side-bars{
+                display: none;
+            }body{
+                width: 500px;
+            }
+            }
+        
+   
 
     .emailbar{
         height: 45px;
@@ -155,21 +211,7 @@ padding: 10px;
                             </label> 
                             <input class="passwordbar" type="text" name="password" placeholder="password"><br><br>
 
-                            <strong>
-                                <div class="inpost">
-                            {% for post inpost%}</div>
-                            <h2 class="post">
-                                {{post.title}}
-                                                      </h2>
-                                <p class="content">{{
-                                    post.content
-                                }}
-                                    </p>
-                        
-                                </strong>
-                        
-                        
-                        
+                         
                         </form><div class="link">
                         <li class="make payment">
                             <a class="make payment" href="make payment.html">
@@ -186,9 +228,9 @@ padding: 10px;
           </div> 
             
           <script>
-const express=reqire('expression');
+const express=require('expression');
 const app=express('bcrypt');
-const mongoose=reqire('mongoose');
+const mongoose=require('mongoose');
 // connect to database
 mongoose: connect ('mongoose';
 const user, schema=new mongoose .schema({
@@ -197,7 +239,7 @@ const user, schema=new mongoose .schema({
  email:String,
  password:String  
 })
-user: schimer, pre ('//local host/userDB.'{use :New ,url ,passer:true,use, unifitopology:true});
+user: schemer, pre ('//local host/userDB.'{use :New ,url ,passer:true,use, unifitopology:true});
 //Define user schema
 constuser-new mongoose.schema({
     username:String,
@@ -213,7 +255,7 @@ user: schema.pre('save',async function(next)
 }
 )
 constuser=mongoose;model(
-    //creat user model.constuser=mongoose;model
+    //create user model.constuser=mongoose;model
     ('user', userschema),
     app.post('//creat account route',
     app.post('/creat account'),
@@ -223,7 +265,7 @@ constuser=mongoose;model(
 ))
 try{
   await user.save();
-  res.send('account created succesfuuly;')  
+  res.send('account created successfully;')  
 }
 catch(error){
     res.status(400),send('error creating account')

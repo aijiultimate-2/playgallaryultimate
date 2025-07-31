@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>www.playgallaryultimate.com</title>
+    <title>www.playgallaryultimate</title>
+    <a href="app.py"></a>
     
     <style>
 .h{
@@ -42,15 +43,19 @@ display: flex;
                 width: 7px;
             }.emailbar{
                 width: 20px;
+                display: flex;
             }.passwordbar{
                 width: 20px;
+                display: flex;
 
             }.usernamebar{
                 width: 20px;
+                display: flex;
             }.o{
                 width: 20px;
             }.side-bars{
                 background-color: transparent;
+                display: flex;
                 width: 0;
             }.h{
                 display: none;
@@ -98,7 +103,7 @@ display: flex;
         height: 45px;
         width: 500px;
         border-radius: 15px;
-        margin-left: 55px;
+        margin-left: 40px;
         border-color: beige;
         background-color:  rgb(31, 28, 28);
         color: beige;
@@ -174,17 +179,17 @@ display: flex;
                 margin-left: 200px;
                 margin-top: 200px;
             }.submit{
-                margin-left: 100px;
+                margin-left: 150px;
                 margin-top: 20px;
                 height: 50px;
-                width: 100px;
+                width: 480px;
                 background-color: orange;
                 border: none;
                 border-radius: 9px;
                 font-size: bold;
                 color: beige;
                 cursor: pointer;
-                transition: transfom 0.3s ;
+                transition: transform 0.3s ;
                 box-shadow: 3px 3px 3px gainsboro;
 
                
@@ -238,10 +243,10 @@ display: flex;
     </div>
     <script>
     const stripe =stripe('secret');
-    stip.createtoken('bank',{country
+    stipe.createtoken('bank',{country
     :'us',
 currency:'u.s.d',
-accontnumber:'000',
+accontnumber:'00000',
 accontholdername:'g',
 accontholdertype:'company'
 }). then(function(result) {
@@ -254,18 +259,18 @@ const bankaccounttoken = result.token.id;
 </script>
 <script>
     const strip = stripe();
-    const paymentform = document.getElementById('payment-form');
-    const paybutton = document.getElementById('pay-button');
-    paybutton = addEventListener('click',async(e) = {
-        e.preventDefult(),
+    const payment,form = document.getElementById('payment-form');
+    const pay,button = document.getElementById('pay-button');
+    pay,button = addEventListener('click',async(e) = 
+        e,prevent,Default(),{
         const :cardNumber = document.getElementById('card-number') , value,
-        const :exp-month , document.getElementById('exp-month') ,value,
-        const: exp-year , document.getElementById('exp-year') ,value,
+        const :exp-month , document,getElementById:('exp-month') ,value,
+        const: exp-year , document,getElementById:('exp-year') ,value,
         try:{
-            const :paymentmethod = await strip.createpaymentmethod{{
+            const :payment, method = await strip.create,payment,method,{{
                 type:'card',
                 card: {
-                    number:cardnumber,
+                    number:card,number,
                     exp_month:parseInt(exp_month),
                     exp_year:parseInt(exp_year),
                     cvc:cvc,
