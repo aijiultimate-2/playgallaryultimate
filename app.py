@@ -1,14 +1,20 @@
-from flask import Flask, jsonify, request
 
-app = Flask(__name__)
+import os
+from flask import Flask, jsonify, request, send_from_directory
+
+
+app = Flask(__name__, static_folder=None)
+
 
 # In-memory storage for the items
 items = []
+
 
 # Route to get all items
 @app.route('/items', methods=['GET'])
 def get_items():
     return jsonify(items), 200
+
 
 # Route to add a new item
 @app.route('/items', methods=['POST'])
@@ -16,6 +22,7 @@ def add_item():
     new_item = request.json
     items.append(new_item)
     return jsonify(new_item), 201
+
 
 # Route to get a specific item by index
 @app.route('/items/<int:index>', methods=['GET'])
@@ -25,6 +32,7 @@ def get_item(index):
         return jsonify(item), 200
     except IndexError:
         return jsonify({'error': 'Item not found'}), 404
+
 
 # Route to update an item
 @app.route('/items/<int:index>', methods=['PUT'])
@@ -37,6 +45,7 @@ def update_item(index):
     except IndexError:
         return jsonify({'error': 'Item not found'}), 404
 
+
 # Route to delete an item
 @app.route('/items/<int:index>', methods=['DELETE'])
 def delete_item(index):
@@ -45,19 +54,19 @@ def delete_item(index):
         return jsonify(deleted_item), 204
     except IndexError:
         return jsonify({'error': 'Item not found'}), 404
-        
- 
-    def home():
-        return jsonify(removed_task), 200
-        # use PORT from environment variable
-
-        
 
 
-    port = int(os.environ.get(PORT, 5000) )
+# Route to serve the main web page
+@app.route('/')
+def serve_home():
+    return send_from_directory('.', 'website.html')
 
-    app.run(host='0.0.0.0', port=port)
+# Route to serve static files (css, js, images, etc.)
+@app.route('/<path:filename>')
+def serve_static(filename):
+    return send_from_directory('.', filename)
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    port = int(os.environ.get('PORT', 5000))
+    app.run(host='0.0.0.0', port=port)
 
