@@ -1,0 +1,81 @@
+body {
+    background-color: black;
+    color: beige;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+h1 {
+    font-size: 40px;
+    text-align: center;
+    margin-top: 20px;
+}
+
+.nav-bar {
+    height: 70px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: transparent;
+    padding: 0 20px;
+}
+
+.left-section, .right-section {
+    display: flex;
+    align-items: center;
+}
+
+.G-button {
+    background-color: rgb(195, 43, 226);
+    height: 60px;
+    width: 60px;
+    border: none;
+    border-radius: 7px;
+    color: beige;
+    font-size: 40px;
+    margin-left: 20px;
+    box-shadow: 3px 3px 3px gainsboro;
+    margin-top: 5px;
+}
+
+.submit-button {
+    background-color: orange;
+    height: 50px;
+    width: 200px;
+    color: beige;
+    font-size: large;
+    cursor: pointer;
+    border: none;
+    border-radius: 15px;
+    transition: transform 0.3s;
+    box-shadow: 3px 3px 3px ghostwhite;
+}
+
+.submit-button:hover {
+    background-color: rgb(195, 43, 226);
+    transform: translateY(-10px);
+}
+
+.video-gallary {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+}
+
+.video {
+    margin: 10px;
+    border: 2px solid gainsboro;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+video {
+    width: 100%;
+    height: auto;
+}

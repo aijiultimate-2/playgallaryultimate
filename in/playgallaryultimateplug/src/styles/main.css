@@ -1,0 +1,65 @@
+body {
+    background-color: black;
+    color: beige;
+    font-family: Arial, sans-serif;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    color: rgb(195, 43, 226);
+}
+
+.nav-bar {
+    height: 70px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: transparent;
+    padding: 0 20px;
+}
+
+.G-button {
+    background-color: rgb(195, 43, 226);
+    height: 60px;
+    width: 60px;
+    border: none;
+    border-radius: 7px;
+    color: beige;
+    font-size: 40px;
+    box-shadow: 3px 3px 3px gainsboro;
+    cursor: pointer;
+}
+
+.submit-button {
+    background-color: orange;
+    height: 50px;
+    width: 200px;
+    color: beige;
+    font-size: large;
+    cursor: pointer;
+    border: none;
+    border-radius: 15px;
+    transition: transform 0.3s;
+    box-shadow: 3px 3px 3px ghostwhite;
+}
+
+.submit-button:hover {
+    background-color: rgb(195, 43, 226);
+    transform: translateY(-10px);
+}
+
+.video-gallary {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+}
+
+.video-gallary video {
+    margin: 10px;
+    border-radius: 10px;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+}

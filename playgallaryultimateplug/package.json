@@ -1,0 +1,22 @@
+{
+  "name": "playgallaryultimateplug",
+  "version": "1.0.0",
+  "description": "A static website project for showcasing videos.",
+  "main": "src/index.html",
+  "scripts": {
+    "start": "live-server src",
+    "build": "echo 'Build step can be added here.'"
+  },
+  "keywords": [
+    "gallery",
+    "videos",
+    "static",
+    "website"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "dependencies": {},
+  "devDependencies": {
+    "live-server": "^1.2.1"
+  }
+}
