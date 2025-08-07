@@ -1,12 +1,16 @@
 {
     "cSpell.words": [
         "accontnumber",
+        "constscreen",
         "findone",
         "isvalidpassword",
         "jsonify",
+        "paddingbottom",
+        "screenwidth",
         "spacebar",
         "unifitopology",
-        "userschema"
+        "userschema",
+        "videohight"
     ],
     "python.testing.unittestArgs": [
         "-v",
