@@ -1,17 +1,18 @@
-from flask import Flask, request, jsonify
+from flask import Flask, render_template, request, jsonify
 import os
 
 app = Flask(__name__)
 
-# In-memory user storage (demo purposes only)
 users = {}
-
-# Example data for search
 videos = [
     {"title": "Box Elimination", "description": "Shoot the boxes coming from above."},
     {"title": "Space Invaders", "description": "Classic arcade shooter."},
     {"title": "Puzzle Quest", "description": "Solve puzzles and advance levels."}
 ]
+
+@app.route('/')
+def home():
+    return render_template('index.html')
 
 @app.route('/api/register', methods=['POST'])
 def register():
@@ -47,8 +48,6 @@ def search():
     results = [v for v in videos if q in v['title'].lower() or q in v['description'].lower()]
     return jsonify(results), 200
 
-# Run the app for local development and compatibility with Render
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 10000))
     app.run(host='0.0.0.0', port=port)
-# Render compatibility

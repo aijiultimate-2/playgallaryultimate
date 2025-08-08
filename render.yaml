@@ -1,12 +1,10 @@
 
 services:
 - type: web
-name: playgallaryultimate
-ENV: PYTHON
-build: command
-start: command
-plan: free
-branch: main
-buildCommand: pip install -r requirement.txt
-startCommand: python app.py           
-autoDeploy: true
+  name: playgallaryultimate
+  env: python
+  plan: free
+  branch: main
+  buildCommand: pip install -r requirements.txt
+  startCommand: gunicorn app:app
+  autoDeploy: true

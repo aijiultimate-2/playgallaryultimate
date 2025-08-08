@@ -13,25 +13,29 @@
       color: #f5f5f5;
       min-height: 100vh;
     }
+
+    /* Header */
     .header {
-  width: 100%;
-  position: fixed;
-  height: 70px; /* Make header fill the viewport height */
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  top: 0;
-  left: 0;
-  background: #232323;
-  border-bottom: 2px solid beige;
-  z-index: 100;
-}
-    .left-section {
-      width: 120px;
+      width: 100%;
+      position: fixed;
+      height: 70px;
       display: flex;
       align-items: center;
-      padding-left: 10px;
+      justify-content: space-between;
+      top: 0;
+      left: 0;
+      background: #232323;
+      border-bottom: 2px solid beige;
+      z-index: 100;
+      padding: 0 10px;
     }
+
+    .left-section {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
     .G-button {
       background-color: rgb(195, 43, 226);
       height: 50px;
@@ -40,34 +44,10 @@
       border-radius: 7px;
       color: beige;
       font-size: 2rem;
-      margin-left: 10px;
       box-shadow: 3px 3px 3px gainsboro;
-      margin-top: 5px;
       cursor: pointer;
     }
-    .middle-section {
-      flex: 1;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-    }
-    .searchbar {
-      background-color: transparent;
-      border: 1px solid beige;
-      color: beige;
-      height: 40px;
-      width: 220px;
-      border-radius: 15px;
-      padding-left: 12px;
-      box-shadow: 3px 3px 3px ghostwhite;
-      font-size: 1rem;
-      font-family: 'Segoe UI', Arial, sans-serif;
-    }
-    .searchbar::placeholder {
-      color: #bfa;
-      opacity: 0.7;
-    }
+
     .ultimate-button {
       background-color: rgb(195, 43, 226);
       color: beige;
@@ -79,47 +59,60 @@
       font-weight: bold;
       cursor: pointer;
     }
-    .right-section {
-      width: 200px;
+
+    /* Sidebar */
+    .sidebar {
+      height: 100%;
+      width: 0;
+      position: fixed;
+      top: 0;
+      left: 0;
+      background: linear-gradient(180deg, #c32be2, #ff9800);
+      overflow-x: hidden;
+      transition: 0.4s;
+      padding-top: 70px;
+      z-index: 200;
+    }
+
+    .sidebar a {
+      display: block;
+      padding: 15px 25px;
+      text-decoration: none;
+      font-size: 1.2rem;
+      color: #fff;
+      transition: background 0.3s, padding-left 0.3s;
+    }
+
+    .sidebar a:hover {
+      background: rgba(255, 255, 255, 0.2);
+      padding-left: 35px;
+    }
+
+    /* Search bar */
+    .middle-section {
       display: flex;
       align-items: center;
-      justify-content: flex-end;
-      padding-right: 10px;
-      hight:100vh;
+      gap: 10px;
     }
-  .side-bar {
-  background-color: #111;
-  border-radius: 10px;
-  padding: 30px 10px;
-  display: flex;
-  flex-direction: column;
-  gap: 18px;
-  min-height: 500px;      /* Make sidebar longer */
-  box-shadow: 0 4px 24px #0008;
-  align-items: stretch;
-  margin-top: 100px;       /* Add top margin */
-  width:150px;
-}
-    .links, .video-gallary {
-  background: linear-gradient(90deg, #c32be2 0%, #ff9800 100%);
-  color: #fff;
-  border: none;
-  border-radius: 12px;
-  font-size: 1.1rem;
-  font-weight: bold;
-  box-shadow: 2px 2px 12px #0006;
-  padding: 14px 0;
-  margin-bottom: 10px;
-  cursor: pointer;
-  transition: background 0.3s, transform 0.2s, color 0.2s;
-  letter-spacing: 1px;
-  text-shadow: 1px 1px 2px #000a;
-}
-.links:hover, .video-gallary:hover {
-  background: linear-gradient(90deg, #ff9800 0%, #c32be2 100%);
-  color: #ffe;
-  transform: translateY(-4px) scale(1.04);
-}
+
+    .searchbar {
+      background-color: transparent;
+      border: 1px solid beige;
+      color: beige;
+      height: 40px;
+      width: 220px;
+      border-radius: 15px;
+      padding-left: 12px;
+      box-shadow: 3px 3px 3px ghostwhite;
+      font-size: 1rem;
+    }
+
+    .searchbar::placeholder {
+      color: #bfa;
+      opacity: 0.7;
+    }
+
+    /* Main content */
     .container {
       max-width: 900px;
       margin: 120px auto 0 auto;
@@ -128,6 +121,7 @@
       border-radius: 16px;
       box-shadow: 0 4px 24px #0008;
     }
+
     img, video {
       max-width: 100%;
       height: auto;
@@ -135,84 +129,60 @@
       display: block;
       margin: 0 auto 18px auto;
     }
+
+    /* Footer */
     .footer {
       text-align: center;
       padding: 24px 0 0 0;
       color: #888;
       font-size: 1rem;
     }
+
+    /* Play button */
+    .btn {
+      height: 30px;
+      width: 100px;
+      background-color: orange;
+      color: beige;
+      border-radius: 5px;
+      display: inline-block;
+      text-align: center;
+      line-height: 30px;
+      text-decoration: none;
+    }
+
+    /* Responsive */
     @media (max-width: 700px) {
-      .container {
-        max-width: 98vw;
-        padding: 10px;
-      }
-      .header {
-        flex-direction: column;
-        height: auto;
-        padding: 10px 0;
-      }
       .middle-section {
         flex-direction: column;
         gap: 5px;
       }
-      .right-section, .left-section {
-        width: 100%;
-        justify-content: center;
-        padding: 0;
-      }
-      .side-bar {
-        flex-direction: row;
-        flex-wrap: wrap;
-        gap: 5px;
-        justify-content: center;
-      }
-      .links, .video-gallary {
-        width: 90vw;
-        min-width: 120px;
-      }
-    }
-    @media (max-width: 500px) {
-      .container {
-        margin-top: 80px;
-        padding: 5px;
-      }
-      .header {
-        font-size: 0.9rem;
-      }
       .searchbar {
-        width: 100px;
-        font-size: 0.9rem;
+        width: 100%;
       }
-      .ultimate-button {
-        width: 60px;
-        font-size: 0.9rem;
-      }
-    }.btn{
-      hight:30px;
-      width:100px;
-      background-color:orange;
-      color:beige;boder-radius:5px;
     }
   </style>
 </head>
 <body>
+
   <div class="header">
     <div class="left-section">
       <button class="G-button">G</button>
+      <button class="ultimate-button" onclick="toggleSidebar()">Home</button>
     </div>
     <div class="middle-section">
       <input class="searchbar" type="text" placeholder="search" id="search">
-      <button class="ultimate-button">ultimate</button>
+      <button class="ultimate-button">Ultimate</button>
     </div>
-    
-      <div class="side-bar">
-        <button class="links"><a class="create" href="create account.html"><b>CREATE ACCOUNT</b></a></button>
-        <button class="links"><a class="help" href="help.html"><b>HELP</b></a></button>
-        <button class="links"><a class="about" href="about playgallaryultimate.html"><b>ABOUT PLAYGALLARY ULTIMATE</b></a></button>
-        <button class="links"><a class="log" href="log-in.html"><b>LOGIN</b></a></button>
-        <button class="video-gallary" onclick="window.location.href='video-gallary.html'"><b>VIDEO GALLERY</b></button>
-      </div>
-    </div>
+  </div>
+
+  <!-- Sidebar -->
+  <div id="mySidebar" class="sidebar">
+    <a href="create account.html">CREATE ACCOUNT</a>
+    <a href="help.html">HELP</a>
+    <a href="about playgallaryultimate.html">ABOUT PLAYGALLARY ULTIMATE</a>
+    <a href="log-in.html">LOGIN</a>
+    <a href="video-gallary.html">VIDEO GALLERY</a>
   </div>
 
   <div class="container">
@@ -223,36 +193,44 @@
     </header>
     <section>
       <h2>About the Game</h2>
-      <p>
-        Alien Warfare is a high-octane, sci-fi action game where players engage in fierce gunfights against hordes of terrifying extraterrestrials. Equipped with advanced weapons and armor, your mission is to reclaim the Earth from the alien threat.
-      </p>
+      <p>Alien Warfare is a high-octane, sci-fi action game where players engage in fierce gunfights against hordes of terrifying extraterrestrials. Equipped with advanced weapons and armor, your mission is to reclaim the Earth from the alien threat.</p>
     </section>
     <img src="file_0000000008986243aa02c508440f16cd.png" alt="Alien Warfare Cover">
+
     <header>
       <h1>Box Elimination</h1>
       <h2>ENJOY</h2>
-      <button class="btn"><a class="x" href="w.html">PLAY NOW</a></button>
+      <a class="btn" href="w.html">PLAY NOW</a>
     </header>
     <section>
       <h2>About the Game</h2>
-      <p>
-        Box Elimination is a game in which the player shoots the boxes coming from above.
-      </p>
+      <p>Box Elimination is a game in which the player shoots the boxes coming from above.</p>
     </section>
     <img src="DTA.png" alt="Box Elimination Cover">
+
     <div class="footer">
       &copy; 2025 playgallaryultimate studio. All rights reserved.<br>
       <a href="mailto:playgallaryultimate@gmail.com" style="color:orange;">playgallaryultimate@gmail.com</a>
     </div>
   </div>
-<script>
-  // Example: Responsive search filter (adjust as needed)
-  document.getElementById("search").addEventListener("input", function() {
-    const value = this.value.toLowerCase();
-    document.querySelectorAll(".container section, .container header").forEach(item => {
-      item.style.display = item.textContent.toLowerCase().includes(value) ? "" : "none";
+
+  <script>
+    function toggleSidebar() {
+      const sidebar = document.getElementById("mySidebar");
+      if (sidebar.style.width === "250px") {
+        sidebar.style.width = "0";
+      } else {
+        sidebar.style.width = "250px";
+      }
+    }
+
+    document.getElementById("search").addEventListener("input", function() {
+      const value = this.value.toLowerCase();
+      document.querySelectorAll(".container section, .container header").forEach(item => {
+        item.style.display = item.textContent.toLowerCase().includes(value) ? "" : "none";
+      });
     });
-  });
-</script>
+  </script>
+
 </body>
 </html>
