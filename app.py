@@ -1,309 +1,160 @@
 import os
-import sqlite3
-from datetime import datetime
-from flask import (
-    Flask, render_template, request, redirect, url_for,
-    flash, session, send_from_directory, jsonify
-)
-from werkzeug.security import generate_password_hash, check_password_hash
-from werkzeug.utils import secure_filename
 import stripe
+from flask import Flask, render_template, request, redirect, url_for, flash, jsonify, send_from_directory
+from flask_sqlalchemy import SQLAlchemy
+from flask_login import LoginManager, login_user, logout_user, login_required, current_user, UserMixin
+from werkzeug.utils import secure_filename
+from datetime import datetime
 
-# ---- Configuration ----
-BASE_DIR = os.path.abspath(os.path.dirname(__file__))
-UPLOAD_FOLDER = os.path.join(BASE_DIR, "videos")
-os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+# ---------------- CONFIG ---------------- #
+app = Flask(__name__)
+app.config['SECRET_KEY'] = os.environ.get("SECRET_KEY", "dev_secret")
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DATABASE_URL", "sqlite:///site.db")
+app.config['UPLOAD_FOLDER'] = "videos"
+app.config['STRIPE_SECRET_KEY'] = os.environ.get("STRIPE_SECRET_KEY", "your_stripe_secret")
+stripe.api_key = app.config['STRIPE_SECRET_KEY']
+
+os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
+
+db = SQLAlchemy(app)
+login_manager = LoginManager(app)
+login_manager.login_view = "login"
 
 ALLOWED_EXTENSIONS = {"mp4", "webm", "ogg"}
-MAX_CONTENT_LENGTH = 250 * 1024 * 1024  # 250 MB max upload
 
-DATABASE = os.path.join(BASE_DIR, "db.sqlite3")
 
-# Flask
-app = Flask(__name__, template_folder="templates", static_folder="static")
-app.config.update(
-    UPLOAD_FOLDER=UPLOAD_FOLDER,
-    MAX_CONTENT_LENGTH=MAX_CONTENT_LENGTH,
-    SESSION_COOKIE_HTTPONLY=True,
-)
+# ---------------- MODELS ---------------- #
+class User(db.Model, UserMixin):
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(100), nullable=False)
+    email = db.Column(db.String(150), unique=True, nullable=False)
+    password = db.Column(db.String(200), nullable=False)
 
-# Secret keys from env (set these on Render or locally)
-app.secret_key = os.environ.get("SECRET_KEY", "dev-secret-key")
 
-# Stripe
-stripe.api_key = os.environ.get("STRIPE_SECRET_KEY")  # set on Render
-STRIPE_PUBLISHABLE_KEY = os.environ.get("STRIPE_PUBLISHABLE_KEY")  # for frontend
+class Video(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(200), nullable=False)
+    description = db.Column(db.Text, nullable=True)
+    filename = db.Column(db.String(200), nullable=False)
+    upload_date = db.Column(db.DateTime, default=datetime.utcnow)
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
 
-# ---- Database helpers ----
-def get_db():
-    conn = sqlite3.connect(DATABASE)
-    conn.row_factory = sqlite3.Row
-    return conn
 
-def init_db():
-    conn = get_db()
-    cur = conn.cursor()
-    cur.execute("""
-    CREATE TABLE IF NOT EXISTS users (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        username TEXT NOT NULL,
-        email TEXT UNIQUE NOT NULL,
-        password_hash TEXT NOT NULL,
-        created_at TEXT NOT NULL
-    )""")
-    cur.execute("""
-    CREATE TABLE IF NOT EXISTS videos (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        title TEXT,
-        description TEXT,
-        filename TEXT NOT NULL,
-        uploader_id INTEGER,
-        uploaded_at TEXT NOT NULL,
-        FOREIGN KEY(uploader_id) REFERENCES users(id)
-    )""")
-    cur.execute("""
-    CREATE TABLE IF NOT EXISTS payments (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        user_id INTEGER,
-        stripe_session_id TEXT,
-        amount INTEGER,
-        currency TEXT,
-        status TEXT,
-        created_at TEXT,
-        FOREIGN KEY(user_id) REFERENCES users(id)
-    )""")
-    conn.commit()
-    conn.close()
+# ---------------- LOGIN ---------------- #
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
 
-init_db()
 
-# ---- Utility ----
 def allowed_file(filename):
     return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
 
-def current_user():
-    uid = session.get("user_id")
-    if not uid:
-        return None
-    conn = get_db()
-    cur = conn.cursor()
-    cur.execute("SELECT id, username, email FROM users WHERE id = ?", (uid,))
-    user = cur.fetchone()
-    conn.close()
-    return user
 
-def login_required(fn):
-    from functools import wraps
-    @wraps(fn)
-    def wrapper(*args, **kwargs):
-        if not session.get("user_id"):
-            flash("Please log in to access that page.", "warning")
-            return redirect(url_for("login", next=request.path))
-        return fn(*args, **kwargs)
-    return wrapper
+# ---------------- ROUTES ---------------- #
+@app.route("/")
+def index():
+    videos = Video.query.order_by(Video.upload_date.desc()).all()
+    return render_template("index.html", videos=videos)
 
-# ---- Routes: Auth ----
+
 @app.route("/register", methods=["GET", "POST"])
 def register():
     if request.method == "POST":
-        username = request.form.get("username", "").strip()
-        email = request.form.get("email", "").strip().lower()
-        password = request.form.get("password", "")
-        if not username or not email or not password:
-            flash("All fields are required.", "danger")
+        username = request.form["username"]
+        email = request.form["email"]
+        password = request.form["password"]
+
+        if User.query.filter_by(email=email).first():
+            flash("Email already registered", "danger")
             return redirect(url_for("register"))
-        conn = get_db()
-        cur = conn.cursor()
-        cur.execute("SELECT id FROM users WHERE email = ?", (email,))
-        if cur.fetchone():
-            flash("Email already registered.", "danger")
-            conn.close()
-            return redirect(url_for("register"))
-        pw_hash = generate_password_hash(password)
-        cur.execute(
-            "INSERT INTO users (username, email, password_hash, created_at) VALUES (?, ?, ?, ?)",
-            (username, email, pw_hash, datetime.utcnow().isoformat())
-        )
-        conn.commit()
-        conn.close()
-        flash("Account created. Please log in.", "success")
+
+        user = User(username=username, email=email, password=password)
+        db.session.add(user)
+        db.session.commit()
+        flash("Account created successfully! Please log in.", "success")
         return redirect(url_for("login"))
+
     return render_template("register.html")
+
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
-        email = request.form.get("email", "").strip().lower()
-        password = request.form.get("password", "")
-        conn = get_db()
-        cur = conn.cursor()
-        cur.execute("SELECT id, password_hash FROM users WHERE email = ?", (email,))
-        row = cur.fetchone()
-        conn.close()
-        if not row or not check_password_hash(row["password_hash"], password):
-            flash("Invalid email or password.", "danger")
-            return redirect(url_for("login"))
-        session["user_id"] = row["id"]
-        flash("Logged in successfully.", "success")
-        next_page = request.args.get("next") or url_for("index")
-        return redirect(next_page)
+        email = request.form["email"]
+        password = request.form["password"]
+        user = User.query.filter_by(email=email, password=password).first()
+        if user:
+            login_user(user)
+            flash("Logged in successfully", "success")
+            return redirect(url_for("index"))
+        else:
+            flash("Invalid credentials", "danger")
     return render_template("login.html")
 
+
 @app.route("/logout")
+@login_required
 def logout():
-    session.pop("user_id", None)
-    flash("Logged out.", "info")
+    logout_user()
+    flash("You have been logged out", "info")
     return redirect(url_for("index"))
 
-# ---- Home & Gallery ----
-@app.route("/")
-def index():
-    return render_template("index.html", user=current_user())
 
-@app.route("/gallery")
-def gallery():
-    conn = get_db()
-    cur = conn.cursor()
-    cur.execute("SELECT v.*, u.username FROM videos v LEFT JOIN users u ON v.uploader_id = u.id ORDER BY v.uploaded_at DESC")
-    rows = cur.fetchall()
-    conn.close()
-    return render_template("gallery.html", videos=rows, user=current_user())
-
-# ---- Upload (logged-in only) ----
+# ---------------- VIDEO UPLOAD ---------------- #
 @app.route("/upload", methods=["GET", "POST"])
 @login_required
-def upload():
+def upload_video():
     if request.method == "POST":
-        if "file" not in request.files:
-            flash("No file part", "danger")
-            return redirect(url_for("upload"))
+        title = request.form["title"]
+        description = request.form["description"]
         file = request.files["file"]
-        title = request.form.get("title", "").strip() or "Untitled"
-        description = request.form.get("description", "").strip()
-        if file.filename == "":
-            flash("No selected file", "danger")
-            return redirect(url_for("upload"))
-        if not allowed_file(file.filename):
-            flash("Invalid file type. Allowed: mp4, webm, ogg", "danger")
-            return redirect(url_for("upload"))
-        filename = secure_filename(file.filename)
-        # avoid collisions
-        timestamp = datetime.utcnow().strftime("%Y%m%d%H%M%S")
-        filename = f"{timestamp}_{filename}"
-        save_path = os.path.join(app.config["UPLOAD_FOLDER"], filename)
-        file.save(save_path)
-        conn = get_db()
-        cur = conn.cursor()
-        cur.execute(
-            "INSERT INTO videos (title, description, filename, uploader_id, uploaded_at) VALUES (?, ?, ?, ?, ?)",
-            (title, description, filename, session["user_id"], datetime.utcnow().isoformat())
-        )
-        conn.commit()
-        conn.close()
-        flash("Video uploaded successfully.", "success")
-        return redirect(url_for("gallery"))
-    return render_template("upload.html", user=current_user())
 
-# ---- Serve uploaded videos ----
-@app.route("/videos/<path:filename>")
+        if file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            new_video = Video(title=title, description=description, filename=filename, user_id=current_user.id)
+            db.session.add(new_video)
+            db.session.commit()
+            flash("Video uploaded successfully", "success")
+            return redirect(url_for("index"))
+        else:
+            flash("Invalid file type", "danger")
+
+    return render_template("upload.html")
+
+
+@app.route("/videos/<filename>")
 def serve_video(filename):
-    return send_from_directory(app.config["UPLOAD_FOLDER"], filename)
+    return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
 
-# ---- Search API (simple) ----
-@app.route("/api/search")
-def api_search():
-    q = request.args.get("q", "").lower()
-    conn = get_db()
-    cur = conn.cursor()
-    cur.execute("SELECT title, description, filename FROM videos")
-    results = []
-    for r in cur.fetchall():
-        if q in (r["title"] or "").lower() or q in (r["description"] or "").lower():
-            results.append({"title": r["title"], "description": r["description"], "url": url_for("serve_video", filename=r["filename"])})
-    conn.close()
-    return jsonify(results)
 
-# ---- Payment with Stripe (one-time via Checkout Session) ----
-@app.route("/buy", methods=["GET"])
-@login_required
-def buy_page():
-    # page where user clicks "Pay" (amount selectable or fixed)
-    return render_template("payment.html", publishable_key=STRIPE_PUBLISHABLE_KEY, user=current_user())
-
+# ---------------- PAYMENT ---------------- #
 @app.route("/create-checkout-session", methods=["POST"])
 @login_required
 def create_checkout_session():
-    data = request.get_json() or {}
-    # amount passed from frontend in dollars -> convert to cents
-    amount_dollars = int(data.get("amount", 5))  # default $5
-    amount_cents = amount_dollars * 100
     try:
-        checkout_session = stripe.checkout.Session.create(
+        session = stripe.checkout.Session.create(
             payment_method_types=["card"],
             line_items=[{
                 "price_data": {
                     "currency": "usd",
-                    "product_data": {"name": data.get("item_name", "PlayGallery Purchase")},
-                    "unit_amount": amount_cents,
+                    "product_data": {"name": "Premium Membership"},
+                    "unit_amount": 5000
                 },
                 "quantity": 1,
             }],
             mode="payment",
-            success_url=request.url_root.rstrip("/") + url_for("payment_success") + "?session_id={CHECKOUT_SESSION_ID}",
-            cancel_url=request.url_root.rstrip("/") + url_for("buy_page"),
-            metadata={"user_id": session["user_id"]},
+            success_url=url_for("index", _external=True) + "?success=true",
+            cancel_url=url_for("index", _external=True) + "?canceled=true",
         )
-        # store minimal payment record (pending)
-        conn = get_db()
-        cur = conn.cursor()
-        cur.execute(
-            "INSERT INTO payments (user_id, stripe_session_id, amount, currency, status, created_at) VALUES (?, ?, ?, ?, ?, ?)",
-            (session["user_id"], checkout_session.id, amount_cents, "usd", "created", datetime.utcnow().isoformat())
-        )
-        conn.commit()
-        conn.close()
-        return jsonify({"id": checkout_session.id, "url": checkout_session.url})
+        return jsonify({"id": session.id})
     except Exception as e:
-        return jsonify({"error": str(e)}), 400
+        return jsonify(error=str(e)), 403
 
-@app.route("/payment-success")
-@login_required
-def payment_success():
-    session_id = request.args.get("session_id")
-    if not session_id:
-        flash("No session id provided.", "danger")
-        return redirect(url_for("buy_page"))
-    try:
-        checkout_session = stripe.checkout.Session.retrieve(session_id)
-        # update payment record
-        conn = get_db()
-        cur = conn.cursor()
-        cur.execute("UPDATE payments SET status = ? WHERE stripe_session_id = ?", (checkout_session.payment_status, session_id))
-        conn.commit()
-        conn.close()
-        flash("Payment successful. Thank you!", "success")
-    except Exception as e:
-        flash("Payment verification failed: " + str(e), "danger")
-    return redirect(url_for("index"))
 
-# ---- Useful: simple health route ----
-@app.route("/health")
-def health():
-    return "OK", 200
-
-# ---- Static files fallback for simple deployment (serve root website.html if present) ----
-@app.route("/site/<path:filename>")
-def serve_site_file(filename):
-    # fallback to serve arbitrary static site files placed in project root or static/
-    root_static = os.path.join(BASE_DIR, "static")
-    if os.path.exists(os.path.join(root_static, filename)):
-        return send_from_directory(root_static, filename)
-    elif os.path.exists(os.path.join(BASE_DIR, filename)):
-        return send_from_directory(BASE_DIR, filename)
-    else:
-        return "Not found", 404
-
-# ---- Run ----
+# ---------------- MAIN ---------------- #
 if __name__ == "__main__":
+    with app.app_context():
+        db.create_all()
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port)
