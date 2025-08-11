@@ -1,147 +1,95 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <title>www.playgallaryultimate</title>
-        
-        
-        
-<style>
-    body{background-color: rgb(34, 32, 32);
-        
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>select Duration - playgallaryultimate</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      background-color: #1f1c1c;
+      color: beige;
+      margin: 0;
+      font-family: 'Segoe UI', Arial, sans-serif;
     }
-     .G-button{
-        margin-top: 50px;
-
-background-color:  rgb(195, 43, 226);
-height: 250px;
-width: 250px;
-border: none;
-border-radius: 20px;
-color: beige;
-
-font-size: 150px; box-shadow:3px 3px 3px ghostwhite ;
-margin-left: 20px ;        
-         }
-        .form-row{
-            margin-top: 50px;
-            margin-left: 800px;
-            margin-bottom: 500px;
-        }
-        .card{
-            margin-top: 50px;
-            color: beige;
-        }.submit-button{
-            margin-top: 50px;
-            margin-left:20px ;
-            background-color: orange;
-            margin-bottom: 500px;
-            height: 50px;
-            width: 200px;
-            color: beige;
-            font-size: bold;
-            cursor: pointer;
-            border: none;
-            border-radius: 15px;
-            transition: transform 0.3s; box-shadow:3px 3px 3px ghostwhite ;
-            
-
-        }.submit-button:hover{
-            background-color: rgb(195, 43, 226);
-            transform: translateY(-10px);
-        }
-        .form{
-            margin-top: 140px;
-        }
-        .duration{
-            margin-left: 720px;
-            color: beige;
-        }.d{font-size: large;
-            height: 30px;
-            cursor: pointer;
-        }.side-bar{
-            background-color: rgb(22, 21, 21);
-            position: fixed;
-            left: 0;
-            bottom: 0;
-            top: 0;
-            width: 290px;}
-           .side-bars{
-            background-color: rgb(22, 21, 21);
-            position: fixed;
-            right: 0;
-            bottom: 0;
-            top: 0;
-            width: 100px;}
-
-
-            @media(max-width: 500px){
-    .container{
-        display: flex;
-    width: 300px;
-        object-fit: contain;
-        align-items: center;
-    }.side-bar{
-        width: 100px;
-    } .G-button{
-            
-            background-color:  rgb(195, 43, 226);
-            height: 60px;
-            width: 60px;
-            border: none;
-            border-radius: 7px;
-            color: beige;
-            font-size: bold;
-            font-size: 40px;
-        
-    
-            box-shadow: 3px 3px 3px gainsboro;
-            margin-top: 200px;
-         }.form{
-            
-         }.submit-button{
-            margin-right: 700px;
-            
-         }.duration{
-            margin-left: 700px;
-            
-
-         }
-
-        }
-
-
-
-
-            .e{
-                color: beige;
-                font-size: large;
-            }.h{
-                margin-left: 710px;
-                color: beige;
-            }
-</style>
-    </head>
-    <body>
-        <div class="container">
-            <div class="header">
-                <div class="left-section">
-                 <div class="side-bar">
-                    <button class="G-button">G</button>
-                 </div>    
-                   
-                </div>
-                <div class="middle-section">
-        <h1 class="h">select payment duration</h1>
-            
-                <div class="right-section">
-            
-                <div class="side-bars"></div>
-                </div>
-                <div>
-                    <form class="form" action="/charge" method="post" id="payment-form"
-    >
-    
-        <div form action="/charge" method="post" id="payment-form">
+    .container {
+      max-width: 400px;
+      margin: 40px auto;
+      padding: 24px;
+      background: #222;
+      border-radius: 16px;
+      box-shadow: 0 4px 24px #0008;
+    }
+    h2 {
+      text-align: center;
+      margin-bottom: 24px;
+      color: #c32be2;
+    }
+    label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: bold;
+    }
+    input {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 18px;
+      border-radius: 8px;
+      border: 1px solid #c32be2;
+      background: #1f1c1c;
+      color: beige;
+      font-size: 1rem;
+      box-sizing: border-box;
+    }
+    input::placeholder {
+      color: #bfa;
+      opacity: 0.7;
+    }
+    button {
+      width: 100%;
+      padding: 12px;
+      background: #c32be2;
+      color: beige;
+      border: none;
+      border-radius: 8px;
+      font-size: 1.1rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    button:hover {
+      background: #a01cc7;
+    }
+    .link {
+      text-align: center;
+      margin-top: 18px;
+    }
+    .link a {
+      color: orange;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    .message {
+      text-align: center;
+      margin-bottom: 12px;
+      font-size: 1rem;
+      color: #f66;
+    }
+    @media (max-width: 500px) {
+      .container {
+        max-width: 98vw;
+        padding: 10px;
+      }
+      input, button {
+        font-size: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>select duration</h2>
+    <div class="message" id="message"></div>
+    <div form action="/charge" method="post" id="payment-form">
             <label class="duration" for="duration">
                 <b>SELECT DURATION:</b>
         
@@ -186,8 +134,9 @@ margin-left: 20px ;
         </div>
                 </div>
         </div>
-        
-            <script>
+    </div>
+  </div>
+  <script>
                 const stripe =stripe('strip')
                 const paymentForm = document.getElementById
                 ('paymentform')
@@ -215,7 +164,7 @@ const result = await stripe.confirmcardpayment(clientsecret,
     },
    
 });
-if (result,error) //Handle error},
+if (result.error) //Handle error},
 else:{
     //handle successful payment
 }catch(error:) {
