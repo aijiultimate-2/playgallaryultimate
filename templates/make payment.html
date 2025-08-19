@@ -130,10 +130,10 @@
 
     <!-- Sidebar -->
     <div class="sidebar" id="sidebar">
-        <a href="/">🏠 Home</a>
-        <a href="/account">👤 My Account</a>
-        <a href="/videos">🎥 Videos</a>
-        <a href="/logout">🚪 Logout</a>
+        <a href="website.html">🏠 Home</a>
+        <a href="submit.html">👤 My Account</a>
+        <a href="video-gallary.html">🎥 Videos</a>
+        <a href="intro.html">🚪 Logout</a>
     </div>
 
     <!-- Toggle Button -->
@@ -151,9 +151,13 @@
 
             <p id="price-display">Price: $150 USD</p>
 
-            <button type="submit" class="submit-button">Proceed to Payment</button>
+            <button class="submit-button" type="button" onclick="goToConfirm()">paynow</button>
         </form>
+
+    <div class="link" style="text-align:center; margin-top:20px;">
+        <a href="securepayment.html" style="color:orange; font-weight:bold;">Go to Secure Payment Page</a>
     </div>
+
 
     <script>
         // Sidebar toggle
@@ -169,6 +173,11 @@
             let price = (durationSelect.value === "6-months") ? 150 : 300;
             priceDisplay.textContent = `Price: $${price} USD`;
         });
+
+        // Go to confirm.html on paynow
+        function goToConfirm() {
+            window.location.href = "confirm.html";
+        }
     </script>
 
 </body>

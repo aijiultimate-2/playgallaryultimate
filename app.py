@@ -1,53 +1,173 @@
-from flask import Flask, render_template, request, jsonify
-import os
+import os, requests
+from flask import Flask, request, render_template, jsonify, redirect, url_for, session, flash, send_from_directory
+from werkzeug.utils import secure_filename
+from flask_sqlalchemy import SQLAlchemy
+from datetime import datetime
 
-app = Flask(__name__)
+# ---------- CONFIG ----------
+UPLOAD_FOLDER = "videos"
+ALLOWED_EXTENSIONS = {"mp4", "webm", "ogg"}
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
-users = {}
-videos = [
-    {"title": "Box Elimination", "description": "Shoot the boxes coming from above."},
-    {"title": "Space Invaders", "description": "Classic arcade shooter."},
-    {"title": "Puzzle Quest", "description": "Solve puzzles and advance levels."}
+app = Flask(__name__, static_folder="static", template_folder="templates")
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['SECRET_KEY'] = os.environ.get('FLASK_SECRET', 'dev-secret')
+app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
+
+db = SQLAlchemy(app)
+
+PAYSTACK_SECRET_KEY = os.environ.get("PAYSTACK_SECRET_KEY")
+
+# ---------- MODELS ----------
+class Purchase(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    video_id = db.Column(db.String(50), nullable=False)
+    customer_email = db.Column(db.String(255), nullable=False)
+    reference = db.Column(db.String(120), unique=True, nullable=False)
+    amount = db.Column(db.Integer, nullable=False)
+    currency = db.Column(db.String(10), default="NGN")
+    paid_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+class Comment(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    video_id = db.Column(db.String(50), nullable=False)
+    email = db.Column(db.String(255), nullable=False)
+    content = db.Column(db.Text, nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+with app.app_context():
+    db.create_all()
+
+# ---------- DEMO VIDEOS ----------
+VIDEOS = [
+    {"id": "vid1", "title": "Sample Video 1", "filename": "sample1.mp4", "price_kobo": 50000},
+    {"id": "vid2", "title": "Sample Video 2", "filename": "sample2.mp4", "price_kobo": 80000},
 ]
 
+# ---------- HELPERS ----------
+def allowed_file(filename):
+    return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
+
+# ---------- ROUTES ----------
+
+# Landing page = website.html
 @app.route('/')
-def home():
-    return render_template('index.html')
+def landing():
+    return render_template("website.html")
 
-@app.route('/api/register', methods=['POST'])
-def register():
-    data = request.get_json()
-    username = data.get('username')
-    email = data.get('email')
-    password = data.get('password')
+# --- Upload videos ---
+@app.route('/api/upload', methods=['POST'])
+def upload_video():
+    file = request.files.get("file")
+    if not file or file.filename == "":
+        return jsonify({"msg": "No file"}), 400
+    if not allowed_file(file.filename):
+        return jsonify({"msg": "Invalid type"}), 400
 
-    if not username or not email or not password:
-        return jsonify({"msg": "All fields required."}), 400
+    filename = secure_filename(file.filename)
+    file.save(os.path.join(app.config["UPLOAD_FOLDER"], filename))
+    return jsonify({"msg": "Uploaded", "url": f"/videos/{filename}"}), 201
 
-    if email in users:
-        return jsonify({"msg": "Email already registered."}), 400
+@app.route('/videos/<path:filename>')
+def serve_video(filename):
+    return send_from_directory(app.config["UPLOAD_FOLDER"], filename)
 
-    users[email] = {"username": username, "password": password}
-    return jsonify({"msg": "Account created successfully."}), 200
+# --- Paystack Checkout ---
+@app.route("/paystack/init", methods=["POST"])
+def paystack_init():
+    data = request.json
+    video_id = data.get("video_id")
+    email = data.get("email")
 
-@app.route('/api/login', methods=['POST'])
-def login():
-    data = request.get_json()
-    email = data.get('email')
-    password = data.get('password')
+    video = next((v for v in VIDEOS if v["id"] == video_id), None)
+    if not video:
+        return jsonify({"error": "Invalid video"}), 400
+    if not email:
+        return jsonify({"error": "Email required"}), 400
 
-    user = users.get(email)
-    if not user or user['password'] != password:
-        return jsonify({"msg": "Invalid email or password."}), 401
+    headers = {"Authorization": f"Bearer {PAYSTACK_SECRET_KEY}"}
+    payload = {
+        "email": email,
+        "amount": video["price_kobo"],  # Paystack expects kobo
+        "callback_url": request.host_url + "paystack/callback"
+    }
+    r = requests.post("https://api.paystack.co/transaction/initialize", json=payload, headers=headers)
+    res = r.json()
+    if not res.get("status"):
+        return jsonify({"error": res}), 400
+    return jsonify({"auth_url": res["data"]["authorization_url"], "ref": res["data"]["reference"]})
 
-    return jsonify({"msg": "Login successful.", "username": user['username']}), 200
+@app.route("/paystack/callback")
+def paystack_callback():
+    ref = request.args.get("reference")
+    if not ref:
+        return "No reference", 400
 
-@app.route('/api/search', methods=['GET'])
-def search():
-    q = request.args.get('q', '').lower()
-    results = [v for v in videos if q in v['title'].lower() or q in v['description'].lower()]
-    return jsonify(results), 200
+    headers = {"Authorization": f"Bearer {PAYSTACK_SECRET_KEY}"}
+    r = requests.get(f"https://api.paystack.co/transaction/verify/{ref}", headers=headers)
+    res = r.json()
+    if res.get("status") and res["data"]["status"] == "success":
+        data = res["data"]
+        p = Purchase(video_id="vid1",  # TODO: map correctly
+                     customer_email=data["customer"]["email"],
+                     reference=ref,
+                     amount=data["amount"],
+                     currency=data["currency"])
+        db.session.add(p)
+        db.session.commit()
+        return render_template("success.html")
+    return render_template("cancel.html")
 
-if __name__ == '__main__':
-    port = int(os.environ.get('PORT', 10000))
-    app.run(host='0.0.0.0', port=port)
+# --- Comments ---
+@app.route("/comments/<video_id>", methods=["GET"])
+def get_comments(video_id):
+    comments = Comment.query.filter_by(video_id=video_id).order_by(Comment.created_at.desc()).all()
+    return jsonify([{"email": c.email, "content": c.content, "created_at": c.created_at.isoformat()} for c in comments])
+
+@app.route("/comments/<video_id>", methods=["POST"])
+def add_comment(video_id):
+    data = request.json
+    email, content = data.get("email"), data.get("content")
+    if not email or not content:
+        return jsonify({"error": "Email and content required"}), 400
+    if not email.endswith("@gmail.com"):
+        return jsonify({"error": "Only Gmail accounts allowed"}), 403
+    c = Comment(video_id=video_id, email=email, content=content)
+    db.session.add(c)
+    db.session.commit()
+    return jsonify({"msg": "Comment added"}), 201
+
+# --- Protected video ---
+@app.route("/video/<video_id>")
+def serve_protected(video_id):
+    email = request.args.get("email")
+    if not email:
+        return "Provide email", 403
+    purchase = Purchase.query.filter_by(video_id=video_id, customer_email=email).first()
+    if not purchase:
+        return "No purchase found", 403
+    video = next((v for v in VIDEOS if v["id"] == video_id), None)
+    return send_from_directory("protected_videos", video["filename"])
+
+# ---------- AUTO ROUTES FOR ALL OTHER HTML PAGES ----------
+TEMPLATE_DIR = os.path.join(os.path.dirname(__file__), "templates")
+
+for filename in os.listdir(TEMPLATE_DIR):
+    if filename.endswith(".html"):
+        page_name = filename[:-5]  # remove ".html"
+        if page_name == "website":
+            continue  # already handled as landing page
+        route_path = f"/{page_name}"
+
+        def make_route(name):
+            def route():
+                return render_template(f"{name}.html")
+            return route
+
+        if page_name not in app.view_functions:
+            app.add_url_rule(route_path, page_name, make_route(page_name))
+
+# ---------- MAIN ----------
+if __name__ == "__main__":
+    app.run(debug=True, host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))

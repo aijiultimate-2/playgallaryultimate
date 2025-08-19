@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Video Gallery</title>
+
+  <style>
+    body {
+      background-color: black;
+      margin: 0;
+      font-family: Arial, sans-serif;
+      color: beige;
+    }
+
+    /* Navbar */
+    .nav-bar {
+      height: 70px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: fixed;
+      background-color: rgba(0,0,0,0.7);
+      left: 0;
+      right: 0;
+      top: 0;
+      padding: 0 20px;
+      z-index: 10;
+    }
+    .G-button {
+      background-color: rgb(195, 43, 226);
+      height: 60px;
+      width: 60px;
+      border: none;
+      border-radius: 7px;
+      color: beige;
+      font-weight: bold;
+      font-size: 40px;
+      cursor: pointer;
+      box-shadow: 3px 3px 3px gainsboro;
+    }
+    .title {
+      font-size: 28px;
+      font-weight: bold;
+      animation: bounce 2s infinite linear;
+    }
+
+    /* Animations */
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      40% { transform: translateY(-20px); }
+      60% { transform: translateY(-10px); }
+    }
+    @keyframes rotate {
+      from { transform: rotate(0); }
+      to { transform: rotate(360deg); }
+    }
+    .rotate {
+      animation: rotate 3s infinite linear;
+    }
+
+    /* Video gallery */
+    .video-gallery {
+      margin-top: 90px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      justify-content: center;
+      padding: 20px;
+    }
+    .video-card {
+      background: #111;
+      border: 2px solid #444;
+      border-radius: 10px;
+      padding: 15px;
+      width: 320px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+    }
+    .video-card video {
+      width: 100%;
+      border-radius: 8px;
+    }
+    .video-title {
+      margin: 10px 0;
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+    /* Comments */
+    .comments {
+      margin-top: 10px;
+    }
+    .comment {
+      font-size: 14px;
+      margin: 5px 0;
+      padding: 5px;
+      border-bottom: 1px solid #333;
+    }
+    .comment-form {
+      margin-top: 10px;
+      display: flex;
+      gap: 5px;
+    }
+    .comment-form input {
+      flex: 1;
+      padding: 8px;
+      border-radius: 5px;
+      border: none;
+      outline: none;
+    }
+    .comment-form button {
+      background: orange;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+      color: #000;
+    }
+    .comment-form button:hover {
+      background: rgb(195, 43, 226);
+      color: beige;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <div class="nav-bar">
+    <button class="G-button rotate">G</button>
+    <h1 class="title">VIDEO GALLERY</h1>
+  </div>
+
+  <!-- Video gallery -->
+  <div class="video-gallery" id="videoContainer"></div>
+
+  <script>
+    // Fetch videos from backend
+    fetch('/get-videos')
+      .then(res => res.json())
+      .then(videos => {
+        const videoContainer = document.getElementById('videoContainer');
+
+        videos.forEach(video => {
+          const card = document.createElement('div');
+          card.classList.add('video-card');
+
+          // Video element
+          const vid = document.createElement('video');
+          vid.src = video.url;
+          vid.controls = true;
+
+          // Title
+          const title = document.createElement('div');
+          title.classList.add('video-title');
+          title.textContent = video.title || "Untitled";
+
+          // Comments section
+          const commentsDiv = document.createElement('div');
+          commentsDiv.classList.add('comments');
+          commentsDiv.id = `comments-${video.id}`;
+
+          // Example static comment (replace with backend fetch later)
+          commentsDiv.innerHTML = `
+            <div class="comment">🔥 Nice video!</div>
+            <div class="comment">💡 Great upload!</div>
+          `;
+
+          // Comment form
+          const form = document.createElement('form');
+          form.classList.add('comment-form');
+          form.innerHTML = `
+            <input type="text" placeholder="Add a comment..." required>
+            <button type="submit">Post</button>
+          `;
+          form.addEventListener('submit', e => {
+            e.preventDefault();
+            const input = form.querySelector('input');
+            if (input.value.trim() !== "") {
+              const newComment = document.createElement('div');
+              newComment.classList.add('comment');
+              newComment.textContent = input.value;
+              commentsDiv.appendChild(newComment);
+              input.value = "";
+            }
+          });
+
+          // Build card
+          card.appendChild(vid);
+          card.appendChild(title);
+          card.appendChild(commentsDiv);
+          card.appendChild(form);
+          videoContainer.appendChild(card);
+        });
+      })
+      .catch(err => console.error('Error loading videos:', err));
+  </script>
+</body>
+</html>

@@ -1,1 +1,19 @@
-Flask
+Flask==2.3.3
+gunicorn==21.2.0
+python-dotenv==1.0.0
+
+# Database
+SQLAlchemy==2.0.20
+Flask-SQLAlchemy==3.0.5
+Flask-Migrate==4.0.4
+
+# Authentication
+Flask-Login==0.6.2
+itsdangerous==2.1.2
+
+# File uploads
+Werkzeug==2.3.7
+
+# Paystack integration
+requests==2.31.0
+# Caching
