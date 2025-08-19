@@ -1,5 +1,5 @@
 import os, requests
-from flask import Flask, request, render_template, jsonify, redirect, url_for, session, flash, send_from_directory
+from flask import Flask, request, render_template, jsonify, redirect, url_for, send_from_directory
 from werkzeug.utils import secure_filename
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
@@ -51,9 +51,13 @@ def allowed_file(filename):
 
 # ---------- ROUTES ----------
 
-# Landing page = website.html
+# Landing = intro.html (redirects to website.html after 5s)
 @app.route('/')
-def landing():
+def intro():
+    return render_template("intro.html")
+
+@app.route('/website')
+def website():
     return render_template("website.html")
 
 # --- Upload videos ---
@@ -89,7 +93,7 @@ def paystack_init():
     headers = {"Authorization": f"Bearer {PAYSTACK_SECRET_KEY}"}
     payload = {
         "email": email,
-        "amount": video["price_kobo"],  # Paystack expects kobo
+        "amount": video["price_kobo"],
         "callback_url": request.host_url + "paystack/callback"
     }
     r = requests.post("https://api.paystack.co/transaction/initialize", json=payload, headers=headers)
@@ -150,14 +154,14 @@ def serve_protected(video_id):
     video = next((v for v in VIDEOS if v["id"] == video_id), None)
     return send_from_directory("protected_videos", video["filename"])
 
-# ---------- AUTO ROUTES FOR ALL OTHER HTML PAGES ----------
+# ---------- AUTO ROUTES FOR OTHER HTML PAGES ----------
 TEMPLATE_DIR = os.path.join(os.path.dirname(__file__), "templates")
 
 for filename in os.listdir(TEMPLATE_DIR):
     if filename.endswith(".html"):
-        page_name = filename[:-5]  # remove ".html"
-        if page_name == "website":
-            continue  # already handled as landing page
+        page_name = filename[:-5]
+        if page_name in ["intro", "website"]:  # already handled
+            continue
         route_path = f"/{page_name}"
 
         def make_route(name):
