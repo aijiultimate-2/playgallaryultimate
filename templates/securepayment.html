@@ -144,7 +144,7 @@
       let handler = PaystackPop.setup({
         key: "pk_test_YOUR_PUBLIC_KEY", // replace with your Paystack public key
         email: email,
-        amount: Math.round(amount * 100), // Paystack uses kobo/cents
+        amount: Math.round(amount * 150), // Paystack uses kobo/cents
         currency: "USD", // 👈 Important: set currency to USD
         ref: "PGU-" + Math.floor((Math.random() * 1000000000) + 1), // unique ref
         metadata: {

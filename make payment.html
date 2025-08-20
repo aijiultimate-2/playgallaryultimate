@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>select Duration - playgallaryultimate</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      background-color: #1f1c1c;
+      color: beige;
+      margin: 0;
+      font-family: 'Segoe UI', Arial, sans-serif;
+    }
+    .container {
+      max-width: 400px;
+      margin: 40px auto;
+      padding: 24px;
+      background: #222;
+      border-radius: 16px;
+      box-shadow: 0 4px 24px #0008;
+    }
+    h2 {
+      text-align: center;
+      margin-bottom: 24px;
+      color: #c32be2;
+    }
+    label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: bold;
+    }
+    input {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 18px;
+      border-radius: 8px;
+      border: 1px solid #c32be2;
+      background: #1f1c1c;
+      color: beige;
+      font-size: 1rem;
+      box-sizing: border-box;
+    }
+    input::placeholder {
+      color: #bfa;
+      opacity: 0.7;
+    }
+    button {
+      width: 100%;
+      padding: 12px;
+      background: #c32be2;
+      color: beige;
+      border: none;
+      border-radius: 8px;
+      font-size: 1.1rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    button:hover {
+      background: #a01cc7;
+    }
+    .link {
+      text-align: center;
+      margin-top: 18px;
+    }
+    .link a {
+      color: orange;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    .message {
+      text-align: center;
+      margin-bottom: 12px;
+      font-size: 1rem;
+      color: #f66;
+    }
+    @media (max-width: 500px) {
+      .container {
+        max-width: 98vw;
+        padding: 10px;
+      }
+      input, button {
+        font-size: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>select duration</h2>
+    <div class="message" id="message"></div>
+    <div form action="/charge" method="post" id="payment-form">
+            <label class="duration" for="duration">
+                <b>SELECT DURATION:</b>
+        
+            </label>
+            <select class="d" id="duration" name="duration">
+                <option class="6-months" value="6-months" >
+                    <b>
+                        6-MONTHS (150U.S.D)
+                    </b>
+                </option>
+                <OPtion   class="value"   value="1 year"     >
+        <b>
+            1YEAR-(300U.S.D)
+        </b>
+                </OPtion>
+        
+            </select>
+        
+    
+        </form>
+    
+        
+    </div>
+    <div class="form-row">
+       
+        <label class="card" for="cardelement"> <b>
+            CREDIT OR DEBIT CARD
+        </b></label>
+    
+    <div>
+       <button class="submit-button" id="submit-button" >
+        <li>
+            <a class="e" href="securepayment.html">
+                submit
+            </a>
+        </li>
+       </button> 
+    </div>
+        
+            </div>
+        
+        </div>
+                </div>
+        </div>
+    </div>
+  </div>
+  <script>
+                const stripe =stripe('strip')
+                const paymentForm = document.getElementById
+                ('paymentform')
+                const durationselect = document.getElementById('durationselect')
+                paymentForm.addEventListener('submit',async (e) =>
+                {
+                    e.preventDefault();
+                    const duration =durationselect.value;
+                    const price =getprice(duration);
+                    try{
+                        const Response = await fetch('/create-payment-intent',{
+                            method:'post',
+                            headers:{
+                                'content-type':'application/json',
+                            },
+                            body: json.stringify({price}),
+                        });
+                        
+                    }
+                });
+const{clientsecret} =await Response.json();
+const result = await stripe.confirmcardpayment(clientsecret,
+   { payment_method:{
+        card:cardelement,
+    },
+   
+});
+if (result.error) //Handle error},
+else:{
+    //handle successful payment
+}catch(error:) {
+    //handle error
+}
+function getprice(duration){
+    switch(duration){
+        case '6-months':
+            return 150;
+            case '1-year':
+                return 300
+            
+    }
+}
+
+            </script>
+    </body>
+</html>

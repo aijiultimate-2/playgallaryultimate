@@ -1,4 +1,5 @@
 Flask==2.3.3
+<<<<<<< HEAD
 gunicorn==21.2.0
 python-dotenv==1.0.0
 
@@ -17,3 +18,11 @@ Werkzeug==2.3.7
 # Paystack integration
 requests==2.31.0
 # Caching
+=======
+Flask-Login==0.6.3
+Flask-SQLAlchemy==3.1.1
+Werkzeug==2.3.6
+stripe==8.7.0
+gunicorn==21.2.0
+
+>>>>>>> 56ceaf3067bbfef06c677cad874c78c3846e13ab
