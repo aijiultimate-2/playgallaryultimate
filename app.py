@@ -74,9 +74,7 @@ VIDEOS = [
 def allowed_file(filename):
     return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
 
-# ---------- ROUTES ----------
-
-# Landing page
+# ---------- ROUTES FOR ALL PAGES ----------
 @app.route("/")
 def intro():
     return render_template("intro.html")
@@ -85,11 +83,14 @@ def intro():
 def website():
     return render_template("website.html")
 
-@app.route("/video-gallery")
-def video_gallery():
-    return render_template("vdx.html", videos=VIDEOS)
+@app.route("/about")
+def about():
+    return render_template("about.html")
 
-# ---------- AUTH ROUTES ----------
+@app.route("/help")
+def help_page():
+    return render_template("help.html")
+
 @app.route("/register", methods=["GET", "POST"])
 def register():
     if request.method == "POST":
@@ -127,6 +128,40 @@ def logout():
     flash("Logged out successfully", "success")
     return redirect(url_for("intro"))
 
+# ---------- VIDEO GALLERY PAGES ----------
+@app.route("/vdx")
+def vdx():
+    return render_template("vdx.html", videos=VIDEOS)
+
+@app.route("/video_gallery")
+def video_gallery_alt():
+    return render_template("video_gallery.html", videos=VIDEOS)
+
+@app.route("/submit", methods=["GET", "POST"])
+@login_required
+def submit_page():
+    if request.method == "POST":
+        # Handle form submission
+        flash("Form submitted successfully!", "success")
+        return redirect(url_for("website"))
+    return render_template("submit.html")
+
+@app.route("/makepayment/<video_id>")
+@login_required
+def make_payment(video_id):
+    video = next((v for v in VIDEOS if v["id"] == video_id), None)
+    if not video:
+        return "Video not found", 404
+    return render_template("makepayment.html", video=video)
+
+@app.route("/securepayment/<video_id>")
+@login_required
+def secure_payment(video_id):
+    video = next((v for v in VIDEOS if v["id"] == video_id), None)
+    if not video:
+        return "Video not found", 404
+    return render_template("securepayment.html", video=video)
+
 # ---------- VIDEO UPLOAD ----------
 @app.route('/api/upload', methods=['POST'])
 @login_required
@@ -152,15 +187,12 @@ def serve_protected(video_id):
     purchase = Purchase.query.filter_by(video_id=video_id, customer_email=current_user.email).first()
     if not purchase:
         return "No purchase found", 403
-
     video = next((v for v in VIDEOS if v["id"] == video_id), None)
     if not video:
         return "Video not found", 404
-
     file_path = os.path.join(PROTECTED_FOLDER, video["filename"])
     if not os.path.exists(file_path):
         return "Video file missing", 404
-
     return send_from_directory(PROTECTED_FOLDER, video["filename"])
 
 # ---------- COMMENTS ----------
@@ -172,24 +204,18 @@ def get_comments(video_id):
 @app.route("/comments/<video_id>", methods=["POST"])
 @login_required
 def add_comment(video_id):
+    if not current_user.email.endswith("@gmail.com"):
+        return jsonify({"error": "Only Gmail accounts allowed"}), 403
     data = request.json
-    email, content = current_user.email, data.get("content")
+    content = data.get("content")
     if not content:
         return jsonify({"error": "Content required"}), 400
-    c = Comment(video_id=video_id, email=email, content=content)
+    c = Comment(video_id=video_id, email=current_user.email, content=content)
     db.session.add(c)
     db.session.commit()
     return jsonify({"msg": "Comment added"}), 201
 
 # ---------- PAYSTACK ----------
-@app.route("/payment/<video_id>")
-@login_required
-def payment_page(video_id):
-    video = next((v for v in VIDEOS if v["id"] == video_id), None)
-    if not video:
-        return "Video not found", 404
-    return render_template("payment.html", video=video)
-
 @app.route("/paystack/init", methods=["POST"])
 @login_required
 def paystack_init():
@@ -198,7 +224,6 @@ def paystack_init():
     video = next((v for v in VIDEOS if v["id"] == video_id), None)
     if not video:
         return jsonify({"error": "Invalid video"}), 400
-
     headers = {"Authorization": f"Bearer {PAYSTACK_SECRET_KEY}"}
     payload = {
         "email": current_user.email,
@@ -218,7 +243,6 @@ def paystack_callback():
     video_id = request.args.get("video_id")
     if not ref or not video_id:
         return "Missing reference or video_id", 400
-
     headers = {"Authorization": f"Bearer {PAYSTACK_SECRET_KEY}"}
     r = requests.get(f"https://api.paystack.co/transaction/verify/{ref}", headers=headers)
     res = r.json()
@@ -237,26 +261,15 @@ def paystack_callback():
     flash("Payment failed or cancelled", "danger")
     return render_template("cancel.html")
 
-# ---------- AUTO ROUTES FOR EXTRA HTML PAGES ----------
+# ---------- AUTO ROUTES FOR ANY OTHER HTML PAGE ----------
 TEMPLATE_DIR = os.path.join(os.path.dirname(__file__), "templates")
-
-def register_extra_routes():
-    for filename in os.listdir(TEMPLATE_DIR):
-        if filename.endswith(".html"):
-            page_name = filename[:-5]
-            if page_name in ["intro", "website", "vdx", "register", "login", "payment", "success", "cancel"]:
-                continue
-            route_path = f"/{page_name}"
-
-            def make_route(name):
-                def route():
-                    return render_template(f"{name}.html")
-                return route
-
-            if page_name not in app.view_functions:
-                app.add_url_rule(route_path, page_name, make_route(page_name))
-
-register_extra_routes()
+for filename in os.listdir(TEMPLATE_DIR):
+    if filename.endswith(".html"):
+        page_name = filename[:-5]
+        skip_pages = ["intro","website","about","help","register","login","vdx","video_gallery","submit","makepayment","securepayment","success","cancel"]
+        if page_name in skip_pages:
+            continue
+        app.add_url_rule(f"/{page_name}", page_name, lambda name=page_name: render_template(f"{name}.html"))
 
 # ---------- RUN ----------
 if __name__ == "__main__":
