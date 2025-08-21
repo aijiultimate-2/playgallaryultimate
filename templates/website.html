@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>playgallaryultimate</title>
+  <title>PlayGallery Ultimate</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     html, body {
@@ -13,8 +13,6 @@
       color: #f5f5f5;
       min-height: 100vh;
     }
-
-    /* Header */
     .header {
       width: 100%;
       position: fixed;
@@ -29,39 +27,19 @@
       z-index: 100;
       padding: 0 10px;
     }
-
-    .left-section {
-      display: flex;
-      align-items: center;
-      gap: 15px;
-      
-    }
-
-    .G-button {
+    .left-section { display: flex; align-items: center; gap: 15px; }
+    .G-button, .ultimate-button, .ultimate {
       background-color: rgb(195, 43, 226);
-      height: 50px;
-      width: 50px;
+      color: beige;
       border: none;
       border-radius: 7px;
-      color: beige;
-      font-size: 2rem;
       box-shadow: 3px 3px 3px gainsboro;
       cursor: pointer;
-    }
-
-    .ultimate-button {
-      background-color: rgb(195, 43, 226);
-      color: beige;
-      height: 40px;
-      width: 80px;
-      border: none;
-      border-radius: 7px;
-      box-shadow: 3px 3px 3px gainsboro;
       font-weight: bold;
-      cursor: pointer;
     }
-
-    /* Sidebar */
+    .G-button { height: 50px; width: 50px; font-size: 2rem; }
+    .ultimate-button { height: 40px; width: 80px; }
+    .ultimate { height: 40px; width: 60px; margin-right: 20px; padding-right: 30px; }
     .sidebar {
       height: 100%;
       width: 0;
@@ -74,7 +52,6 @@
       padding-top: 70px;
       z-index: 200;
     }
-
     .sidebar a {
       display: block;
       padding: 15px 25px;
@@ -83,19 +60,8 @@
       color: #fff;
       transition: background 0.3s, padding-left 0.3s;
     }
-
-    .sidebar a:hover {
-      background: rgba(255, 255, 255, 0.2);
-      padding-left: 35px;
-    }
-
-    /* Search bar */
-    .middle-section {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
+    .sidebar a:hover { background: rgba(255, 255, 255, 0.2); padding-left: 35px; }
+    .middle-section { display: flex; align-items: center; gap: 10px; }
     .searchbar {
       background-color: transparent;
       border: 1px solid beige;
@@ -103,17 +69,11 @@
       height: 40px;
       width: 220px;
       border-radius: 15px;
-      padding-left: ;
+      padding-left: 10px;
       box-shadow: 3px 3px 3px ghostwhite;
       font-size: 1rem;
     }
-
-    .searchbar::placeholder {
-      color: #bfa;
-      opacity: 0.7;
-    }
-
-    /* Main content */
+    .searchbar::placeholder { color: #bfa; opacity: 0.7; }
     .container {
       max-width: 900px;
       margin: 120px auto 0 auto;
@@ -122,36 +82,8 @@
       border-radius: 16px;
       box-shadow: 0 4px 24px #0008;
     }
-
-    img, video {
-      max-width: 100%;
-      height: auto;
-      border-radius: 8px;
-      display: block;
-      margin: 0 auto 18px auto;
-    }
-
-    /* Footer */
-    .footer {
-      text-align: center;
-      padding: 24px 0 0 0;
-      color: #888;
-      font-size: 1rem;
-    }.ultimate{
-      margin-right: 20px;
-      background-color: rgb(195, 43, 226);
-      color: beige;
-      height: 40px;
-      width: 60px;
-      border: none;
-      border-radius: 7px;
-      box-shadow: 3px 3px 3px gainsboro;
-      font-weight: bold;
-      cursor: pointer;
-      padding-right: 30px;
-    }
-
-    /* Play button */
+    img, video { max-width: 100%; height: auto; border-radius: 8px; display: block; margin: 0 auto 18px auto; }
+    .footer { text-align: center; padding: 24px 0 0 0; color: #888; font-size: 1rem; }
     .btn {
       height: 30px;
       width: 100px;
@@ -163,90 +95,79 @@
       line-height: 30px;
       text-decoration: none;
     }
-
-    /* Responsive */
     @media (max-width: 700px) {
-      .middle-section {
-        flex-direction: column;
-        gap: 5px;
-      }
-      .searchbar {
-        width: 100%;
-      }
+      .middle-section { flex-direction: column; gap: 5px; }
+      .searchbar { width: 100%; }
     }
   </style>
 </head>
 <body>
 
-  <div class="header">
-    <div class="left-section">
-      <button class="G-button">G</button>
-      
-    </div>
-    <div class="middle-section">
-      <input class="searchbar" type="text" placeholder="search" id="search">
-      <button class="ultimate-button">Ultimate</button>
-    </div>
+<div class="header">
   <div class="left-section">
-<button class="ultimate" onclick="toggleSidebar()">Home</button>
+    <button class="G-button">G</button>
   </div>
+  <div class="middle-section">
+    <input class="searchbar" type="text" placeholder="search" id="search">
+    <button class="ultimate-button">Ultimate</button>
   </div>
-
-  <!-- Sidebar -->
-  <div id="mySidebar" class="sidebar">
-    <a href="/create account.html">CREATE ACCOUNT</a>
-    <a href="/help.html">HELP</a>
-    <a href="/about playgallaryultimate.html">ABOUT PLAYGALLARY ULTIMATE</a>
-    <a href="/log-in.html">LOGIN</a>
-    <a href="/vdx.html">VIDEO GALLERY</a>
+  <div class="left-section">
+    <button class="ultimate" onclick="toggleSidebar()">Home</button>
   </div>
+</div>
 
-  <div class="container">
-    <header>
-      <h1>Alien Warfare</h1>
-      <p>Join the elite strike force and battle against ruthless alien invaders. Survive the chaos. Defend Earth. Become the legend.</p>
-      <h2>Coming Soon</h2>
-    </header>
-    <section>
-      <h2>About the Game</h2>
-      <p>Alien Warfare is a high-octane, sci-fi action game where players engage in fierce gunfights against hordes of terrifying extraterrestrials. Equipped with advanced weapons and armor, your mission is to reclaim the Earth from the alien threat.</p>
-    </section>
-    <img src="/file_0000000008986243aa02c508440f16cd.png" alt="Alien Warfare Cover">
+<!-- Sidebar -->
+<div id="mySidebar" class="sidebar">
+  <a href="{{ url_for('intro') }}">CREATE ACCOUNT</a>
+  <a href="{{ url_for('help') }}">HELP</a>
+  <a href="{{ url_for('about') }}">ABOUT PLAYGALLARY ULTIMATE</a>
+  <a href="{{ url_for('login') }}">LOGIN</a>
+  <a href="{{ url_for('vdx') }}">VIDEO GALLERY</a>
+</div>
 
-    <header>
-      <h1>Box Elimination</h1>
-      <h2>ENJOY</h2>
-      <a class="btn" href="/w.html">PLAY NOW</a>
-    </header>
-    <section>
-      <h2>About the Game</h2>
-      <p>Box Elimination is a game in which the player shoots the boxes coming from above.</p>
-    </section>
-    <img src="/DTA.png" alt="Box Elimination Cover">
+<div class="container">
+  <header>
+    <h1>Alien Warfare</h1>
+    <p>Join the elite strike force and battle against ruthless alien invaders. Survive the chaos. Defend Earth. Become the legend.</p>
+    <h2>Coming Soon</h2>
+  </header>
+  <section>
+    <h2>About the Game</h2>
+    <p>Alien Warfare is a high-octane, sci-fi action game where players engage in fierce gunfights against hordes of terrifying extraterrestrials. Equipped with advanced weapons and armor, your mission is to reclaim the Earth from the alien threat.</p>
+  </section>
+  <img src="{{ url_for('static', filename='images/file_0000000008986243aa02c508440f16cd.png') }}" alt="Alien Warfare Cover">
 
-    <div class="footer">
-      &copy; 2025 playgallaryultimate studio. All rights reserved.<br>
-      <a href="/mailto:playgallaryultimate@gmail.com" style="color:orange;">playgallaryultimate@gmail.com</a>
-    </div>
+  <header>
+    <h1>Box Elimination</h1>
+    <h2>ENJOY</h2>
+    <a class="btn" href="{{ url_for('w') }}">PLAY NOW</a>
+  </header>
+  <section>
+    <h2>About the Game</h2>
+    <p>Box Elimination is a game in which the player shoots the boxes coming from above.</p>
+  </section>
+  <img src="{{ url_for('static', filename='images/DTA.png') }}" alt="Box Elimination Cover">
+
+  <div class="footer">
+    &copy; 2025 playgallaryultimate studio. All rights reserved.<br>
+    <a href="mailto:playgallaryultimate@gmail.com" style="color:orange;">playgallaryultimate@gmail.com</a>
   </div>
+</div>
 
-  <script>
-    function toggleSidebar() {
-      const sidebar = document.getElementById("mySidebar");
-      if (sidebar.style.width === "250px") {
-        sidebar.style.width = "0";
-      } else {
-        sidebar.style.width = "250px";
-      }
-    }
+<script>
+function toggleSidebar() {
+  const sidebar = document.getElementById("mySidebar");
+  if (sidebar.style.width === "250px") sidebar.style.width = "0";
+  else sidebar.style.width = "250px";
+}
 
-    document.getElementById("search").addEventListener("input", function() {
-      const value = this.value.toLowerCase();
-      document.querySelectorAll(".container section, .container header").forEach(item => {
-        item.style.display = item.textContent.toLowerCase().includes(value) ? "" : "none";
-      });
-    });
-  </script>
+document.getElementById("search").addEventListener("input", function() {
+  const value = this.value.toLowerCase();
+  document.querySelectorAll(".container section, .container header").forEach(item => {
+    item.style.display = item.textContent.toLowerCase().includes(value) ? "" : "none";
+  });
+});
+</script>
 
 </body>
 </html>
