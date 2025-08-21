@@ -75,9 +75,10 @@ def allowed_file(filename):
     return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
 
 # ---------- ROUTES ----------
+
 @app.route("/")
 def intro():
-    # After 3 seconds, redirect to website.html
+    # Show intro page, then redirect to website
     return render_template("intro.html")
 
 @app.route("/website")
@@ -130,14 +131,14 @@ def logout():
     flash("Logged out successfully", "success")
     return redirect(url_for("intro"))
 
-# ---------- VIDEO GALLERY ----------
+# ---------- VIDEO PAGES ----------
 @app.route("/vdx")
 def vdx():
     return render_template("vdx.html", videos=VIDEOS)
 
 @app.route("/video_gallery")
 def video_gallery_alt():
-    return render_template("video-gallery.html", videos=VIDEOS)
+    return render_template("video_gallery.html", videos=VIDEOS)
 
 @app.route("/submit", methods=["GET","POST"])
 @login_required
