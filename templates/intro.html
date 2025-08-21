@@ -52,9 +52,9 @@
   </div>   
 
   <script>
-    // Show intro for 5 seconds before redirect
+    // Show intro for 5 seconds before redirect to Flask route
     setTimeout(() => {
-      window.location.href = "website.html";
+      window.location.href = "{{ url_for('website') }}";
     }, 5000); 
   </script>
 </body>

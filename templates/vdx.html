@@ -23,7 +23,6 @@
       background: black;
       border-radius: 20px;
       box-shadow: 0 8px 32px #000a;
-      position: relative;
       text-align: center;
     }
     .G-button {
@@ -35,7 +34,7 @@
       color: beige;
       font-size: 6rem;
       box-shadow: 3px 3px 3px gainsboro;
-      cursor: pointer;
+      cursor: default;
     }
     .H {
       color: beige;
@@ -52,12 +51,10 @@
   </div>   
 
   <script>
-    // Show intro for 5 seconds before redirect
+    // Redirect to Flask route instead of hardcoded file
     setTimeout(() => {
-      window.location.href = "video-gallary.html";
+      window.location.href = "/video-gallary"; 
     }, 5000); 
   </script>
 </body>
 </html>
-
-      

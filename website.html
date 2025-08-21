@@ -2,8 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>playgallaryultimate</title>
-  <link rel="app.py" href="app.py">
+  <title>PlayGalleryUltimate</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     html, body {
@@ -15,18 +14,18 @@
       min-height: 100vh;
     }
     .header {
-  width: 100%;
-  position: fixed;
-  height: 70px; /* Make header fill the viewport height */
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  top: 0;
-  left: 0;
-  background: #232323;
-  border-bottom: 2px solid beige;
-  z-index: 100;
-}
+      width: 100%;
+      position: fixed;
+      height: 70px;
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      top: 0;
+      left: 0;
+      background: #232323;
+      border-bottom: 2px solid beige;
+      z-index: 100;
+    }
     .left-section {
       width: 120px;
       display: flex;
@@ -86,41 +85,47 @@
       align-items: center;
       justify-content: flex-end;
       padding-right: 10px;
-      hight:100vh;
     }
-  .side-bar {
-  background-color: #111;
-  border-radius: 10px;
-  padding: 30px 10px;
-  display: flex;
-  flex-direction: column;
-  gap: 18px;
-  min-height: 500px;      /* Make sidebar longer */
-  box-shadow: 0 4px 24px #0008;
-  align-items: stretch;
-  margin-top: 100px;       /* Add top margin */
-  width:150px;
-}
+    .side-bar {
+      background-color: #111;
+      border-radius: 10px;
+      padding: 30px 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      min-height: 500px;
+      box-shadow: 0 4px 24px #0008;
+      align-items: stretch;
+      margin-top: 100px;
+      width:150px;
+    }
     .links, .video-gallary {
-  background: linear-gradient(90deg, #c32be2 0%, #ff9800 100%);
-  color: #fff;
-  border: none;
-  border-radius: 12px;
-  font-size: 1.1rem;
-  font-weight: bold;
-  box-shadow: 2px 2px 12px #0006;
-  padding: 14px 0;
-  margin-bottom: 10px;
-  cursor: pointer;
-  transition: background 0.3s, transform 0.2s, color 0.2s;
-  letter-spacing: 1px;
-  text-shadow: 1px 1px 2px #000a;
-}
-.links:hover, .video-gallary:hover {
-  background: linear-gradient(90deg, #ff9800 0%, #c32be2 100%);
-  color: #ffe;
-  transform: translateY(-4px) scale(1.04);
-}
+      background: linear-gradient(90deg, #c32be2 0%, #ff9800 100%);
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      font-size: 1.1rem;
+      font-weight: bold;
+      box-shadow: 2px 2px 12px #0006;
+      padding: 14px 0;
+      margin-bottom: 10px;
+      cursor: pointer;
+      transition: background 0.3s, transform 0.2s, color 0.2s;
+      letter-spacing: 1px;
+      text-shadow: 1px 1px 2px #000a;
+    }
+    .links:hover, .video-gallary:hover {
+      background: linear-gradient(90deg, #ff9800 0%, #c32be2 100%);
+      color: #ffe;
+      transform: translateY(-4px) scale(1.04);
+    }
+    .links a, .video-gallary a {
+      text-decoration: none;
+      color: white;
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
     .container {
       max-width: 900px;
       margin: 120px auto 0 auto;
@@ -188,11 +193,19 @@
         width: 60px;
         font-size: 0.9rem;
       }
-    }.btn{
-      hight:30px;
-      width:100px;
-      background-color:orange;
-      color:beige;boder-radius:5px;
+    }
+    .btn {
+      height: 30px;
+      width: 100px;
+      background-color: orange;
+      color: beige;
+      border-radius: 5px;
+      border: none;
+      cursor: pointer;
+    }
+    .btn a {
+      color: beige;
+      text-decoration: none;
     }
   </style>
 </head>
@@ -203,16 +216,14 @@
     </div>
     <div class="middle-section">
       <input class="searchbar" type="text" placeholder="search" id="search">
-      <button class="ultimate-button">ultimate</button>
+      <button class="ultimate-button">Ultimate</button>
     </div>
-    
-      <div class="side-bar">
-        <button class="links"><a class="create" href="create account.html"><b>CREATE ACCOUNT</b></a></button>
-        <button class="links"><a class="help" href="help.html"><b>HELP</b></a></button>
-        <button class="links"><a class="about" href="about playgallaryultimate.html"><b>ABOUT PLAYGALLARY ULTIMATE</b></a></button>
-        <button class="links"><a class="log" href="log-in.html"><b>LOGIN</b></a></button>
-        <button class="video-gallary" onclick="window.location.href='video-gallary.html'"><b>VIDEO GALLERY</b></button>
-      </div>
+    <div class="side-bar">
+      <button class="links"><a href="/create-account">CREATE ACCOUNT</a></button>
+      <button class="links"><a href="/help">HELP</a></button>
+      <button class="links"><a href="/about">ABOUT PLAYGALLERY ULTIMATE</a></button>
+      <button class="links"><a href="/login">LOGIN</a></button>
+      <button class="video-gallary"><a href="/video-gallery">VIDEO GALLERY</a></button>
     </div>
   </div>
 
@@ -228,11 +239,12 @@
         Alien Warfare is a high-octane, sci-fi action game where players engage in fierce gunfights against hordes of terrifying extraterrestrials. Equipped with advanced weapons and armor, your mission is to reclaim the Earth from the alien threat.
       </p>
     </section>
-    <img src="file_0000000008986243aa02c508440f16cd.png" alt="Alien Warfare Cover">
+    <img src="/static/images/file_0000000008986243aa02c508440f16cd.png" alt="Alien Warfare Cover">
+
     <header>
       <h1>Box Elimination</h1>
       <h2>ENJOY</h2>
-      <button class="btn"><a class="x" href="w.html">PLAY NOW</a></button>
+      <button class="btn"><a href="/play-box">PLAY NOW</a></button>
     </header>
     <section>
       <h2>About the Game</h2>
@@ -240,20 +252,22 @@
         Box Elimination is a game in which the player shoots the boxes coming from above.
       </p>
     </section>
-    <img src="DTA.png" alt="Box Elimination Cover">
+    <img src="/static/images/DTA.png" alt="Box Elimination Cover">
+
     <div class="footer">
-      &copy; 2025 playgallaryultimate studio. All rights reserved.<br>
+      &copy; 2025 PlayGalleryUltimate Studio. All rights reserved.<br>
       <a href="mailto:playgallaryultimate@gmail.com" style="color:orange;">playgallaryultimate@gmail.com</a>
     </div>
   </div>
-<script>
-  // Example: Responsive search filter (adjust as needed)
-  document.getElementById("search").addEventListener("input", function() {
-    const value = this.value.toLowerCase();
-    document.querySelectorAll(".container section, .container header").forEach(item => {
-      item.style.display = item.textContent.toLowerCase().includes(value) ? "" : "none";
+
+  <script>
+    // Search filter
+    document.getElementById("search").addEventListener("input", function() {
+      const value = this.value.toLowerCase();
+      document.querySelectorAll(".container section, .container header").forEach(item => {
+        item.style.display = item.textContent.toLowerCase().includes(value) ? "" : "none";
+      });
     });
-  });
-</script>
+  </script>
 </body>
 </html>

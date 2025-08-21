@@ -99,14 +99,13 @@
       <button type="submit">Create Account</button>
     </form>
     <div class="link">
-      <a href="log-in.html">Already have an account? Login</a>
+      <a href="/login">Already have an account? Login</a>
     </div>
     <div class="link" style="margin-top:10px;">
-      <a href="make payment.html">Make Payment</a>
+      <a href="/make-payment">Make Payment</a>
     </div>
   </div>
   <script>
-    // Example: Connect to your backend API
     document.getElementById('registerForm').addEventListener('submit', async function(e) {
       e.preventDefault();
       const username = document.getElementById('username').value.trim();
@@ -115,8 +114,8 @@
       const message = document.getElementById('message');
       message.textContent = '';
       try {
-        // Replace the URL below with your real backend endpoint
-        const res = await fetch('http://localhost:5000/api/register', {
+        // Use relative path so it works on Render (Flask handles it)
+        const res = await fetch('/api/register', {
           method: 'POST',
           headers: {'Content-Type': 'application/json'},
           body: JSON.stringify({ username, email, password })
@@ -125,7 +124,7 @@
         if (res.ok) {
           message.style.color = '#4f4';
           message.textContent = 'Account created! You can now log in.';
-          setTimeout(() => window.location.href = 'log-in.html', 1500);
+          setTimeout(() => window.location.href = '/login', 1500);
         } else {
           message.style.color = '#f66';
           message.textContent = data.msg || 'Registration failed.';

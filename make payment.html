@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>select Duration - playgallaryultimate</title>
+  <title>Select Duration - playgallaryultimate</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     body {
@@ -29,7 +29,7 @@
       margin-bottom: 6px;
       font-weight: bold;
     }
-    input {
+    select, input {
       width: 100%;
       padding: 12px;
       margin-bottom: 18px;
@@ -39,10 +39,6 @@
       color: beige;
       font-size: 1rem;
       box-sizing: border-box;
-    }
-    input::placeholder {
-      color: #bfa;
-      opacity: 0.7;
     }
     button {
       width: 100%;
@@ -59,127 +55,70 @@
     button:hover {
       background: #a01cc7;
     }
-    .link {
-      text-align: center;
-      margin-top: 18px;
-    }
-    .link a {
-      color: orange;
-      text-decoration: none;
-      font-weight: bold;
-    }
     .message {
       text-align: center;
       margin-bottom: 12px;
       font-size: 1rem;
       color: #f66;
     }
-    @media (max-width: 500px) {
-      .container {
-        max-width: 98vw;
-        padding: 10px;
-      }
-      input, button {
-        font-size: 1rem;
-      }
-    }
   </style>
 </head>
 <body>
   <div class="container">
-    <h2>select duration</h2>
+    <h2>Select Duration</h2>
     <div class="message" id="message"></div>
-    <div form action="/charge" method="post" id="payment-form">
-            <label class="duration" for="duration">
-                <b>SELECT DURATION:</b>
-        
-            </label>
-            <select class="d" id="duration" name="duration">
-                <option class="6-months" value="6-months" >
-                    <b>
-                        6-MONTHS (150U.S.D)
-                    </b>
-                </option>
-                <OPtion   class="value"   value="1 year"     >
-        <b>
-            1YEAR-(300U.S.D)
-        </b>
-                </OPtion>
-        
-            </select>
-        
-    
-        </form>
-    
-        
-    </div>
-    <div class="form-row">
-       
-        <label class="card" for="cardelement"> <b>
-            CREDIT OR DEBIT CARD
-        </b></label>
-    
-    <div>
-       <button class="submit-button" id="submit-button" >
-        <li>
-            <a class="e" href="securepayment.html">
-                submit
-            </a>
-        </li>
-       </button> 
-    </div>
-        
-            </div>
-        
-        </div>
-                </div>
-        </div>
-    </div>
-  </div>
-  <script>
-                const stripe =stripe('strip')
-                const paymentForm = document.getElementById
-                ('paymentform')
-                const durationselect = document.getElementById('durationselect')
-                paymentForm.addEventListener('submit',async (e) =>
-                {
-                    e.preventDefault();
-                    const duration =durationselect.value;
-                    const price =getprice(duration);
-                    try{
-                        const Response = await fetch('/create-payment-intent',{
-                            method:'post',
-                            headers:{
-                                'content-type':'application/json',
-                            },
-                            body: json.stringify({price}),
-                        });
-                        
-                    }
-                });
-const{clientsecret} =await Response.json();
-const result = await stripe.confirmcardpayment(clientsecret,
-   { payment_method:{
-        card:cardelement,
-    },
-   
-});
-if (result.error) //Handle error},
-else:{
-    //handle successful payment
-}catch(error:) {
-    //handle error
-}
-function getprice(duration){
-    switch(duration){
-        case '6-months':
-            return 150;
-            case '1-year':
-                return 300
-            
-    }
-}
 
-            </script>
-    </body>
+    <!-- Real form -->
+    <form id="payment-form" method="POST" action="{{ url_for('create_payment') }}">
+      <label for="duration">Select Duration:</label>
+      <select id="duration" name="duration">
+        <option value="6-months">6 Months (150 U.S.D)</option>
+        <option value="1-year">1 Year (300 U.S.D)</option>
+      </select>
+
+      <label for="card-element">Credit or Debit Card</label>
+      <div id="card-element"><!-- Stripe injects card input here --></div>
+
+      <button type="submit" id="submit-button">Submit</button>
+    </form>
+  </div>
+
+  <!-- Stripe JS -->
+  <script src="https://js.stripe.com/v3/"></script>
+  <script>
+    const stripe = Stripe("YOUR_PUBLISHABLE_KEY"); // replace with real publishable key
+    const elements = stripe.elements();
+    const cardElement = elements.create("card");
+    cardElement.mount("#card-element");
+
+    const paymentForm = document.getElementById("payment-form");
+
+    paymentForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const duration = document.getElementById("duration").value;
+
+      // Call backend to create PaymentIntent
+      const response = await fetch("{{ url_for('create_payment') }}", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ duration })
+      });
+
+      const { client_secret } = await response.json();
+
+      const result = await stripe.confirmCardPayment(client_secret, {
+        payment_method: { card: cardElement }
+      });
+
+      if (result.error) {
+        document.getElementById("message").innerText = result.error.message;
+      } else {
+        if (result.paymentIntent.status === "succeeded") {
+          window.location.href = "{{ url_for('securepayment') }}";
+        }
+      }
+    });
+  </script>
+</body>
 </html>
