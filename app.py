@@ -137,7 +137,7 @@ def vdx():
 
 @app.route("/video_gallery")
 def video_gallery_alt():
-    return render_template("video_gallery.html", videos=VIDEOS)
+    return render_template("video-gallery.html", videos=VIDEOS)
 
 @app.route("/submit", methods=["GET","POST"])
 @login_required
