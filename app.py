@@ -51,11 +51,12 @@ def allowed_file(filename):
 
 # ---------- ROUTES ----------
 
-# Landing = intro.html (redirects to website.html after 5s)
+# Landing = intro.html
 @app.route('/')
 def intro():
     return render_template("intro.html")
 
+# Website page
 @app.route('/website')
 def website():
     return render_template("website.html")
@@ -157,20 +158,23 @@ def serve_protected(video_id):
 # ---------- AUTO ROUTES FOR OTHER HTML PAGES ----------
 TEMPLATE_DIR = os.path.join(os.path.dirname(__file__), "templates")
 
-for filename in os.listdir(TEMPLATE_DIR):
-    if filename.endswith(".html"):
-        page_name = filename[:-5]
-        if page_name in ["intro", "website"]:  # already handled
-            continue
-        route_path = f"/{page_name}"
+def register_extra_routes():
+    for filename in os.listdir(TEMPLATE_DIR):
+        if filename.endswith(".html"):
+            page_name = filename[:-5]
+            if page_name in ["intro", "website"]:  # already handled
+                continue
+            route_path = f"/{page_name}"
 
-        def make_route(name):
-            def route():
-                return render_template(f"{name}.html")
-            return route
+            def make_route(name):
+                def route():
+                    return render_template(f"{name}.html")
+                return route
 
-        if page_name not in app.view_functions:
-            app.add_url_rule(route_path, page_name, make_route(page_name))
+            if page_name not in app.view_functions:
+                app.add_url_rule(route_path, page_name, make_route(page_name))
+
+register_extra_routes()
 
 # ---------- MAIN ----------
 if __name__ == "__main__":
