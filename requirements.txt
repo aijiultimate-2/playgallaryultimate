@@ -1,28 +1,23 @@
-Flask==2.3.3
-<<<<<<< HEAD
-gunicorn==21.2.0
-python-dotenv==1.0.0
+# Core Flask
+Flask==2.2.5
+Werkzeug==2.2.3
+Jinja2==3.1.2
+MarkupSafe==2.1.3
+itsdangerous==2.1.2
 
 # Database
-SQLAlchemy==2.0.20
-Flask-SQLAlchemy==3.0.5
+Flask-SQLAlchemy==3.0.3
+SQLAlchemy==1.4.49
 Flask-Migrate==4.0.4
 
 # Authentication
 Flask-Login==0.6.2
-itsdangerous==2.1.2
 
-# File uploads
-Werkzeug==2.3.7
+# Environment variables
+python-dotenv==1.0.0
 
-# Paystack integration
+# HTTP requests (for Paystack, Stripe, APIs, etc.)
 requests==2.31.0
-# Caching
-=======
-Flask-Login==0.6.3
-Flask-SQLAlchemy==3.1.1
-Werkzeug==2.3.6
-stripe==8.7.0
-gunicorn==21.2.0
 
->>>>>>> 56ceaf3067bbfef06c677cad874c78c3846e13ab
+# Deployment server
+gunicorn==20.1.0
