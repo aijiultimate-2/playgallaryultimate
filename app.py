@@ -8,15 +8,16 @@ from flask_login import LoginManager, login_user, logout_user, login_required, c
 from datetime import datetime
 
 # ---------- CONFIG ----------
-UPLOAD_FOLDER = "videos"
-PROTECTED_FOLDER = "protected_videos"
+BASE_DIR = os.path.abspath(os.path.dirname(__file__))
+UPLOAD_FOLDER = os.path.join(BASE_DIR, "videos")
+PROTECTED_FOLDER = os.path.join(BASE_DIR, "protected_videos")
 ALLOWED_EXTENSIONS = {"mp4", "webm", "ogg"}
 
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 os.makedirs(PROTECTED_FOLDER, exist_ok=True)
 
 app = Flask(__name__, static_folder="static", template_folder="templates")
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(BASE_DIR, 'app.db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = os.environ.get('FLASK_SECRET', 'dev-secret')
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
@@ -37,7 +38,6 @@ class User(db.Model, UserMixin):
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
-    
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
 
@@ -74,9 +74,10 @@ VIDEOS = [
 def allowed_file(filename):
     return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
 
-# ---------- ROUTES FOR ALL PAGES ----------
+# ---------- ROUTES ----------
 @app.route("/")
 def intro():
+    # After 3 seconds, redirect to website.html
     return render_template("intro.html")
 
 @app.route("/website")
@@ -91,7 +92,8 @@ def about():
 def help_page():
     return render_template("help.html")
 
-@app.route("/register", methods=["GET", "POST"])
+# ---------- AUTH ----------
+@app.route("/register", methods=["GET","POST"])
 def register():
     if request.method == "POST":
         username = request.form["username"]
@@ -108,7 +110,7 @@ def register():
         return redirect(url_for("login"))
     return render_template("register.html")
 
-@app.route("/login", methods=["GET", "POST"])
+@app.route("/login", methods=["GET","POST"])
 def login():
     if request.method == "POST":
         email = request.form["email"]
@@ -128,7 +130,7 @@ def logout():
     flash("Logged out successfully", "success")
     return redirect(url_for("intro"))
 
-# ---------- VIDEO GALLERY PAGES ----------
+# ---------- VIDEO GALLERY ----------
 @app.route("/vdx")
 def vdx():
     return render_template("vdx.html", videos=VIDEOS)
@@ -137,11 +139,10 @@ def vdx():
 def video_gallery_alt():
     return render_template("video_gallery.html", videos=VIDEOS)
 
-@app.route("/submit", methods=["GET", "POST"])
+@app.route("/submit", methods=["GET","POST"])
 @login_required
 def submit_page():
     if request.method == "POST":
-        # Handle form submission
         flash("Form submitted successfully!", "success")
         return redirect(url_for("website"))
     return render_template("submit.html")
@@ -171,7 +172,6 @@ def upload_video():
         return jsonify({"msg": "No file"}), 400
     if not allowed_file(file.filename):
         return jsonify({"msg": "Invalid type"}), 400
-
     filename = secure_filename(file.filename)
     file.save(os.path.join(app.config["UPLOAD_FOLDER"], filename))
     return jsonify({"msg": "Uploaded", "url": f"/videos/{filename}"}), 201
@@ -261,12 +261,12 @@ def paystack_callback():
     flash("Payment failed or cancelled", "danger")
     return render_template("cancel.html")
 
-# ---------- AUTO ROUTES FOR ANY OTHER HTML PAGE ----------
-TEMPLATE_DIR = os.path.join(os.path.dirname(__file__), "templates")
+# ---------- AUTO ROUTES FOR OTHER HTML FILES ----------
+TEMPLATE_DIR = os.path.join(BASE_DIR, "templates")
+skip_pages = ["intro","website","about","help","register","login","vdx","video_gallery","submit","makepayment","securepayment","success","cancel"]
 for filename in os.listdir(TEMPLATE_DIR):
     if filename.endswith(".html"):
         page_name = filename[:-5]
-        skip_pages = ["intro","website","about","help","register","login","vdx","video_gallery","submit","makepayment","securepayment","success","cancel"]
         if page_name in skip_pages:
             continue
         app.add_url_rule(f"/{page_name}", page_name, lambda name=page_name: render_template(f"{name}.html"))
