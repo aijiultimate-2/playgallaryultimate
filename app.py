@@ -1,5 +1,5 @@
 import os, requests
-from flask import Flask, request, render_template, jsonify, redirect, url_for, send_from_directory
+from flask import Flask, request, render_template, jsonify, send_from_directory
 from werkzeug.utils import secure_filename
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
@@ -51,15 +51,20 @@ def allowed_file(filename):
 
 # ---------- ROUTES ----------
 
-# Landing = intro.html
-@app.route('/')
+# Landing page (intro first)
+@app.route("/")
 def intro():
     return render_template("intro.html")
 
-# Website page
-@app.route('/website')
+# Website page (after intro)
+@app.route("/website")
 def website():
     return render_template("website.html")
+
+# Video gallery (vdx.html)
+@app.route("/video-gallery")
+def video_gallery():
+    return render_template("vdx.html", videos=VIDEOS)
 
 # --- Upload videos ---
 @app.route('/api/upload', methods=['POST'])
@@ -114,7 +119,7 @@ def paystack_callback():
     res = r.json()
     if res.get("status") and res["data"]["status"] == "success":
         data = res["data"]
-        p = Purchase(video_id="vid1",  # TODO: map correctly
+        p = Purchase(video_id="vid1",  # TODO: improve mapping
                      customer_email=data["customer"]["email"],
                      reference=ref,
                      amount=data["amount"],
@@ -155,14 +160,14 @@ def serve_protected(video_id):
     video = next((v for v in VIDEOS if v["id"] == video_id), None)
     return send_from_directory("protected_videos", video["filename"])
 
-# ---------- AUTO ROUTES FOR OTHER HTML PAGES ----------
+# ---------- AUTO ROUTES FOR EXTRA HTML PAGES ----------
 TEMPLATE_DIR = os.path.join(os.path.dirname(__file__), "templates")
 
 def register_extra_routes():
     for filename in os.listdir(TEMPLATE_DIR):
         if filename.endswith(".html"):
             page_name = filename[:-5]
-            if page_name in ["intro", "website"]:  # already handled
+            if page_name in ["intro", "website", "vdx"]:  # already handled
                 continue
             route_path = f"/{page_name}"
 
