@@ -118,7 +118,7 @@
         localStorage.setItem('videos', JSON.stringify(videos));
         message.style.color = '#4f4';
         message.textContent = 'Video uploaded! Redirecting...';
-        setTimeout(() => window.location.href = 'video-gallary.html', 1200);
+        setTimeout(() => window.location.href = '/video-gallary.html', 1200);
       };
       reader.readAsDataURL(file);
     });
