@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Login - playgallaryultimate</title>
+  <title>Login - PlayGalleryUltimate</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     body {
@@ -89,6 +89,8 @@
   <div class="container">
     <h2>Login</h2>
     <div class="message" id="message"></div>
+
+    <!-- Use Flask route name for form action -->
     <form id="loginForm" autocomplete="off" method="POST" action="{{ url_for('login_post') }}">
       <label for="email">Email</label>
       <input type="email" id="email" name="email" placeholder="Enter email" required>
@@ -96,6 +98,7 @@
       <input type="password" id="password" name="password" placeholder="Enter password" required>
       <button type="submit">Login</button>
     </form>
+
     <div class="link">
       <a href="{{ url_for('create_account') }}">Don't have an account? Create one</a>
     </div>
@@ -108,6 +111,7 @@
       const password = document.getElementById('password').value;
       const message = document.getElementById('message');
       message.textContent = '';
+
       try {
         const res = await fetch('{{ url_for("login_post") }}', {
           method: 'POST',
@@ -115,10 +119,11 @@
           body: JSON.stringify({ email, password })
         });
         const data = await res.json();
+
         if (res.ok) {
           message.style.color = '#4f4';
           message.textContent = 'Login successful! Redirecting...';
-          setTimeout(() => window.location.href = "submit_page", 1200);
+          setTimeout(() => window.location.href = "{{ url_for('submit_page') }}", 1200);
         } else {
           message.style.color = '#f66';
           message.textContent = data.msg || 'Login failed.';

@@ -81,13 +81,18 @@
   <div class="container">
     <h2>Submit a Video</h2>
     <div class="message" id="message"></div>
-    <form id="videoForm" autocomplete="off" method="POST" action="{{ url_for('submit_video_post') }}" enctype="multipart/form-data">
+    <form id="videoForm" autocomplete="off" method="POST" 
+          action="{{ url_for('submit_video_post') }}" 
+          enctype="multipart/form-data">
       <label for="title">Video Title</label>
       <input type="text" id="title" name="title" placeholder="Enter video title" required>
+
       <label for="description">Description</label>
       <textarea id="description" name="description" placeholder="Enter video description" required></textarea>
+
       <label for="video">Video File</label>
       <input type="file" id="video" name="video" accept="video/*" required>
+
       <button type="submit">Upload Video</button>
     </form>
   </div>
@@ -109,7 +114,7 @@
         if (res.ok) {
           message.style.color = '#4f4';
           message.textContent = 'Video uploaded successfully! Redirecting...';
-          setTimeout(() => window.location.href = "video-gallery", 1200);
+          setTimeout(() => window.location.href = "{{ url_for('video_gallery') }}", 1200);
         } else {
           message.style.color = '#f66';
           message.textContent = data.msg || 'Video upload failed.';

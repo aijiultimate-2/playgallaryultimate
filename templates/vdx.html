@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>playgallaryultimate</title>
+  <title>PlayGallery Ultimate</title>
   <style>
     body {
       background-color: black;
@@ -51,9 +51,9 @@
   </div>   
 
   <script>
-    // Redirect to Flask route instead of hardcoded file
+    // Use Flask url_for for correct redirection
     setTimeout(() => {
-      window.location.href = "video-gallary.html";
+      window.location.href = "{{ url_for('video_gallery') }}";
     }, 5000); 
   </script>
 </body>

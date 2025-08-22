@@ -23,7 +23,6 @@
       background: rgba(34, 34, 34, 0.98);
       border-radius: 20px;
       box-shadow: 0 8px 32px #000a;
-      position: relative;
     }
     h2 {
       text-align: center;
@@ -78,7 +77,6 @@
     }
     button:hover {
       background: linear-gradient(90deg, #ff9800 0%, #c32be2 100%);
-      color: #ffe;
       transform: translateY(-2px) scale(1.03);
     }
     .message {
@@ -114,60 +112,4 @@
       <label for="email">Email</label>
       <input id="email" type="email" placeholder="Enter your email" required>
       
-      <label for="amount">Amount (USD)</label>
-      <input id="amount" type="number" min="1" step="0.01" placeholder="Enter amount" required>
-
-      <button type="submit">Pay Now</button>
-    </form>
-  </div>
-
-  <script>
-    const form = document.getElementById('payment-form');
-    const message = document.getElementById('message');
-
-    form.addEventListener('submit', function(e) {
-      e.preventDefault();
-
-      const name = document.getElementById('name').value;
-      const email = document.getElementById('email').value;
-      const amount = parseFloat(document.getElementById('amount').value);
-
-      if (isNaN(amount) || amount <= 0) {
-        message.textContent = "Please enter a valid amount.";
-        message.style.color = "#f66";
-        return;
-      }
-
-      message.textContent = "Redirecting to Paystack...";
-      message.style.color = "#4f4";
-
-      let handler = PaystackPop.setup({
-        key: "pk_test_YOUR_PUBLIC_KEY", // replace with your Paystack public key
-        email: email,
-        amount: Math.round(amount * 150), // Paystack uses kobo/cents
-        currency: "USD", // 👈 Important: set currency to USD
-        ref: "PGU-" + Math.floor((Math.random() * 1000000000) + 1), // unique ref
-        metadata: {
-          custom_fields: [
-            {
-              display_name: "Name",
-              variable_name: "name",
-              value: name
-            }
-          ]
-        },
-        callback: function(response) {
-          // Redirect to success page
-          window.location.href = "success.html?reference=" + response.reference;
-        },
-        onClose: function() {
-          message.textContent = "Transaction cancelled.";
-          message.style.color = "#f66";
-        }
-      });
-
-      handler.openIframe();
-    });
-  </script>
-</body>
-</html>
+      <label for="amount">Amou

@@ -99,10 +99,10 @@
       <button type="submit">Create Account</button>
     </form>
     <div class="link">
-      <a href="{{ url_for('login.html') }}">Already have an account? Login</a>
+      <a href="{{ url_for('login') }}">Already have an account? Login</a>
     </div>
     <div class="link" style="margin-top:10px;">
-      <a href="{{ url_for('make payment.html') }}">Make Payment</a>
+      <a href="{{ url_for('make_payment') }}">Make Payment</a>
     </div>
   </div>
 
@@ -115,7 +115,6 @@
       const message = document.getElementById('message');
       message.textContent = '';
       try {
-        // Flask backend endpoint
         const res = await fetch("{{ url_for('api_register') }}", {
           method: 'POST',
           headers: {'Content-Type': 'application/json'},
@@ -125,7 +124,7 @@
         if (res.ok) {
           message.style.color = '#4f4';
           message.textContent = 'Account created! Redirecting to payment...';
-          setTimeout(() => window.location.href = "make payment.html", 1500);
+          setTimeout(() => window.location.href = "{{ url_for('make_payment') }}", 1500);
         } else {
           message.style.color = '#f66';
           message.textContent = data.msg || 'Registration failed.';
