@@ -1,5 +1,5 @@
 import os, requests
-from flask import Flask, request, render_template, jsonify, redirect, url_for, send_from_directory
+from flask import Flask, request, render_template, jsonify, send_from_directory
 from werkzeug.utils import secure_filename
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
@@ -16,7 +16,6 @@ app.config['SECRET_KEY'] = os.environ.get('FLASK_SECRET', 'dev-secret')
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 
 db = SQLAlchemy(app)
-
 PAYSTACK_SECRET_KEY = os.environ.get("PAYSTACK_SECRET_KEY")
 
 # ---------- MODELS ----------
@@ -50,65 +49,52 @@ def allowed_file(filename):
     return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
 
 # ---------- ROUTES ----------
-
-# Landing = intro.html (redirects to website.html after 5s)
 @app.route('/')
 def intro():
+    # intro.html should auto-redirect to /website after 5s
     return render_template("intro.html")
 
 @app.route('/website')
 def website():
     return render_template("website.html")
-    
-@app.route('/aboutplaygallaryultimate.html')
-def aboutplaygallaryultimate():
-    return render_template("aboutplaygallaryultimaate.html")
 
-@app.route('/create account.html')
-def create account():
-    return render_template("create account.html")
+@app.route('/aboutplaygallaryultimate')
+def about_page():
+    return render_template("aboutplaygallaryultimate.html")
 
-@app.route('/DTA')
-def DTA():
-    return render_template("DTA.PNG")
+@app.route('/create_account')
+def create_account():
+    return render_template("create_account.html")
 
-@app.route('/help.html')
-def help.html():
+@app.route('/help')
+def help_page():
     return render_template("help.html")
 
-@app.route('/log-in.html')
-def log-in.html():
+@app.route('/login')
+def login_page():
     return render_template("log-in.html")
 
-@app.route('/template/file_0000000008986243aa02c508440f16cd.png')
-def template/file_0000000008986243aa02c508440f16cd():
-    return render_template("template/file_0000000008986243aa02c508440f16cd.png")
+@app.route('/make_payment')
+def make_payment():
+    return render_template("make_payment.html")
 
-@app.route('/make payment.html')
-def make payment():
-    return render_template("make payment.html")
-
-@app.route('/securepayment.html')
+@app.route('/securepayment')
 def securepayment():
     return render_template("securepayment.html")
 
-@app.route('/style.css')
-def style():
-    return render_template("style.css")
-
-@app.route('/submit.html')
+@app.route('/submit')
 def submit():
     return render_template("submit.html")
 
 @app.route('/')
-
-@app.route('/vdx.html')
 def vdx():
     return render_template("vdx.html")
-@app.route('/video-gallary.html')
-def video-gallary():
+
+@app.route('/video_gallery')
+def video_gallery():
     return render_template("video-gallary.html")
-@app.route('/w.html')
+
+@app.route('/w')
 def w():
     return render_template("w.html")
 
@@ -120,7 +106,6 @@ def upload_video():
         return jsonify({"msg": "No file"}), 400
     if not allowed_file(file.filename):
         return jsonify({"msg": "Invalid type"}), 400
-
     filename = secure_filename(file.filename)
     file.save(os.path.join(app.config["UPLOAD_FOLDER"], filename))
     return jsonify({"msg": "Uploaded", "url": f"/videos/{filename}"}), 201
@@ -135,7 +120,6 @@ def paystack_init():
     data = request.json
     video_id = data.get("video_id")
     email = data.get("email")
-
     video = next((v for v in VIDEOS if v["id"] == video_id), None)
     if not video:
         return jsonify({"error": "Invalid video"}), 400
@@ -205,24 +189,6 @@ def serve_protected(video_id):
         return "No purchase found", 403
     video = next((v for v in VIDEOS if v["id"] == video_id), None)
     return send_from_directory("protected_videos", video["filename"])
-
-# ---------- AUTO ROUTES FOR OTHER HTML PAGES ----------
-TEMPLATE_DIR = os.path.join(os.path.dirname(__file__), "templates")
-
-for filename in os.listdir(TEMPLATE_DIR):
-    if filename.endswith(".html"):
-        page_name = filename[:-5]
-        if page_name in ["intro", "website"]:  # already handled
-            continue
-        route_path = f"/{page_name}"
-
-        def make_route(name):
-            def route():
-                return render_template(f"{name}.html")
-            return route
-
-        if page_name not in app.view_functions:
-            app.add_url_rule(route_path, page_name, make_route(page_name))
 
 # ---------- MAIN ----------
 if __name__ == "__main__":
