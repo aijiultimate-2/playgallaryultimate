@@ -26,7 +26,7 @@ class Purchase(db.Model):
     customer_email = db.Column(db.String(255), nullable=False)
     reference = db.Column(db.String(120), unique=True, nullable=False)
     amount = db.Column(db.Integer, nullable=False)
-    currency = db.Column(db.String(10), default="NGN")
+    currency = db.Column(db.String(10), default="dollar")
     paid_at = db.Column(db.DateTime, default=datetime.utcnow)
 
 class Comment(db.Model):
@@ -41,8 +41,8 @@ with app.app_context():
 
 # ---------- DEMO VIDEOS ----------
 VIDEOS = [
-    {"id": "vid1", "title": "Sample Video 1", "filename": "sample1.mp4", "price_kobo": 50000},
-    {"id": "vid2", "title": "Sample Video 2", "filename": "sample2.mp4", "price_kobo": 80000},
+    {"id": "vid1", "title": "Sample Video 1", "filename": "sample1.mp4", "price_dollar": 50000},
+    {"id": "vid2", "title": "Sample Video 2", "filename": "sample2.mp4", "price_dollar": 80000},
 ]
 
 # ---------- HELPERS ----------
@@ -59,6 +59,58 @@ def intro():
 @app.route('/website')
 def website():
     return render_template("website.html")
+    
+@app.route('/aboutplaygallaryultimate.html')
+def aboutplaygallaryultimate():
+    return render_template("aboutplaygallaryultimaate.html")
+
+@app.route('/create account.html')
+def create account():
+    return render_template("create account.html")
+
+@app.route('/DTA')
+def DTA():
+    return render_template("DTA.PNG")
+
+@app.route('/help.html')
+def help.html():
+    return render_template("help.html")
+
+@app.route('/log-in.html')
+def log-in.html():
+    return render_template("log-in.html")
+
+@app.route('/template/file_0000000008986243aa02c508440f16cd.png')
+def template/file_0000000008986243aa02c508440f16cd():
+    return render_template("template/file_0000000008986243aa02c508440f16cd.png")
+
+@app.route('/make payment.html')
+def make payment():
+    return render_template("make payment.html")
+
+@app.route('/securepayment.html')
+def securepayment():
+    return render_template("securepayment.html")
+
+@app.route('/style.css')
+def style():
+    return render_template("style.css")
+
+@app.route('/submit.html')
+def submit():
+    return render_template("submit.html")
+
+@app.route('/')
+
+@app.route('/vdx.html')
+def vdx():
+    return render_template("vdx.html")
+@app.route('/video-gallary.html')
+def video-gallary():
+    return render_template("video-gallary.html")
+@app.route('/w.html')
+def w():
+    return render_template("w.html")
 
 # --- Upload videos ---
 @app.route('/api/upload', methods=['POST'])
@@ -93,7 +145,7 @@ def paystack_init():
     headers = {"Authorization": f"Bearer {PAYSTACK_SECRET_KEY}"}
     payload = {
         "email": email,
-        "amount": video["price_kobo"],
+        "amount": video["price_dollar"],
         "callback_url": request.host_url + "paystack/callback"
     }
     r = requests.post("https://api.paystack.co/transaction/initialize", json=payload, headers=headers)

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Login - playgallaryultimate</title>
+  <title>PlayGalleryUltimate - Create Account</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     body {
@@ -87,41 +87,48 @@
 </head>
 <body>
   <div class="container">
-    <h2>Login</h2>
+    <h2>Create Account</h2>
     <div class="message" id="message"></div>
-    <form id="loginForm" autocomplete="off" method="POST" action="{{ url_for('login_post') }}">
+    <form id="registerForm" autocomplete="off">
+      <label for="username">Username</label>
+      <input type="text" id="username" name="username" placeholder="Enter username" required>
       <label for="email">Email</label>
       <input type="email" id="email" name="email" placeholder="Enter email" required>
       <label for="password">Password</label>
       <input type="password" id="password" name="password" placeholder="Enter password" required>
-      <button type="submit">Login</button>
+      <button type="submit">Create Account</button>
     </form>
     <div class="link">
-      <a href="{{ url_for('create_account') }}">Don't have an account? Create one</a>
+      <a href="{{ url_for('login.html') }}">Already have an account? Login</a>
+    </div>
+    <div class="link" style="margin-top:10px;">
+      <a href="{{ url_for('make payment.html') }}">Make Payment</a>
     </div>
   </div>
 
   <script>
-    document.getElementById('loginForm').addEventListener('submit', async function(e) {
+    document.getElementById('registerForm').addEventListener('submit', async function(e) {
       e.preventDefault();
+      const username = document.getElementById('username').value.trim();
       const email = document.getElementById('email').value.trim();
       const password = document.getElementById('password').value;
       const message = document.getElementById('message');
       message.textContent = '';
       try {
-        const res = await fetch('{{ url_for("login_post") }}', {
+        // Flask backend endpoint
+        const res = await fetch("{{ url_for('api_register') }}", {
           method: 'POST',
           headers: {'Content-Type': 'application/json'},
-          body: JSON.stringify({ email, password })
+          body: JSON.stringify({ username, email, password })
         });
         const data = await res.json();
         if (res.ok) {
           message.style.color = '#4f4';
-          message.textContent = 'Login successful! Redirecting...';
-          setTimeout(() => window.location.href = '{{ url_for("submit_page") }}', 1200);
+          message.textContent = 'Account created! Redirecting to payment...';
+          setTimeout(() => window.location.href = "make payment.html", 1500);
         } else {
           message.style.color = '#f66';
-          message.textContent = data.msg || 'Login failed.';
+          message.textContent = data.msg || 'Registration failed.';
         }
       } catch (err) {
         message.style.color = '#f66';

@@ -1,0 +1,19 @@
+ <!doctype html>
+ <html>
+ <body style="background:black;color:white;">
+   <h1>Payment successful!</h1>
+   <p>To view your purchased video, enter the same email you used to pay and click "Go to Video".</p>
+   <input id="email" placeholder="you@example.com">
+   <button id="set">Go to Videos</button>
+   <script>
+     document.getElementById('set').addEventListener('click', async ()=>{
+       const email = document.getElementById('email').value;
+       if(!email) return alert('Enter your email');
+       await fetch('/set_email', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ email }) });
+       window.location = "video-gallary.html";
+     });
+   </script>
+ </body>
+ </html>
+
+ 
