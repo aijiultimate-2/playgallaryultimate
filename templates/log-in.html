@@ -123,7 +123,7 @@
         if (res.ok) {
           message.style.color = '#4f4';
           message.textContent = 'Login successful! Redirecting...';
-          setTimeout(() => window.location.href = "{{ url_for('submit_page') }}", 1200);
+          setTimeout(() => window.location.href = "submit.html", 1200);
         } else {
           message.style.color = '#f66';
           message.textContent = data.msg || 'Login failed.';
