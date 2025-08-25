@@ -174,4 +174,5 @@ for filename in os.listdir(TEMPLATE_DIR):
 
 # ---------- MAIN ----------
 if __name__ == "__main__":
-    app.run(debug=True, host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
+    # Fly.io expects apps to bind to 0.0.0.0:8080
+    app.run(debug=True, host="0.0.0.0", port=int(os.environ.get("PORT", 8080)))

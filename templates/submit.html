@@ -81,46 +81,48 @@
   <div class="container">
     <h2>Submit a Video</h2>
     <div class="message" id="message"></div>
-    <form id="videoForm" autocomplete="off">
+    <form id="videoForm" autocomplete="off" method="POST" 
+          action="{{ url_for('submit_video_post') }}" 
+          enctype="multipart/form-data">
       <label for="title">Video Title</label>
       <input type="text" id="title" name="title" placeholder="Enter video title" required>
+
       <label for="description">Description</label>
       <textarea id="description" name="description" placeholder="Enter video description" required></textarea>
+
       <label for="video">Video File</label>
       <input type="file" id="video" name="video" accept="video/*" required>
+
       <button type="submit">Upload Video</button>
     </form>
   </div>
+
   <script>
-    document.getElementById('videoForm').addEventListener('submit', function(e) {
+    document.getElementById('videoForm').addEventListener('submit', async function(e) {
       e.preventDefault();
-      const title = document.getElementById('title').value.trim();
-      const description = document.getElementById('description').value.trim();
-      const fileInput = document.getElementById('video');
       const message = document.getElementById('message');
       message.textContent = '';
 
-      if (!fileInput.files.length) {
-        message.textContent = 'Please select a video file.';
-        return;
-      }
+      const formData = new FormData(this);
 
-      const file = fileInput.files[0];
-      const reader = new FileReader();
-      reader.onload = function(event) {
-        // Save video info to localStorage (for demo)
-        const videos = JSON.parse(localStorage.getItem('videos') || '[]');
-        videos.push({
-          title,
-          description,
-          videoUrl: event.target.result
+      try {
+        const res = await fetch('{{ url_for("submit_video_post") }}', {
+          method: 'POST',
+          body: formData
         });
-        localStorage.setItem('videos', JSON.stringify(videos));
-        message.style.color = '#4f4';
-        message.textContent = 'Video uploaded! Redirecting...';
-        setTimeout(() => window.location.href = 'video-gallary.html', 1200);
-      };
-      reader.readAsDataURL(file);
+        const data = await res.json();
+        if (res.ok) {
+          message.style.color = '#4f4';
+          message.textContent = 'Video uploaded successfully! Redirecting...';
+          setTimeout(() => window.location.href = "{{ url_for('video_gallery') }}", 1200);
+        } else {
+          message.style.color = '#f66';
+          message.textContent = data.msg || 'Video upload failed.';
+        }
+      } catch (err) {
+        message.style.color = '#f66';
+        message.textContent = 'Network error. Please try again.';
+      }
     });
   </script>
 </body>

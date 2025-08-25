@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>www.playgallaryultimate</title>
+        
+        
+        
+<style>
+    body{background-color: rgb(34, 32, 32);
+        
+    }
+     .G-button{
+        margin-top: 50px;
+
+background-color:  rgb(195, 43, 226);
+height: 250px;
+width: 250px;
+border: none;
+border-radius: 20px;
+color: beige;
+
+font-size: 150px; box-shadow:3px 3px 3px ghostwhite ;
+margin-left: 20px ;        
+         }
+        .form-row{
+            margin-top: 50px;
+            margin-left: 800px;
+            margin-bottom: 500px;
+        }
+        .card{
+            margin-top: 50px;
+            color: beige;
+        }.submit-button{
+            margin-top: 50px;
+            margin-left:20px ;
+            background-color: orange;
+            margin-bottom: 500px;
+            height: 50px;
+            width: 200px;
+            color: beige;
+            font-size: bold;
+            cursor: pointer;
+            border: none;
+            border-radius: 15px;
+            transition: transform 0.3s; box-shadow:3px 3px 3px ghostwhite ;
+            
+
+        }.submit-button:hover{
+            background-color: rgb(195, 43, 226);
+            transform: translateY(-10px);
+        }
+        .form{
+            margin-top: 140px;
+        }
+        .duration{
+            margin-left: 720px;
+            color: beige;
+        }.d{font-size: large;
+            height: 30px;
+            cursor: pointer;
+        }.side-bar{
+            background-color: rgb(22, 21, 21);
+            position: fixed;
+            left: 0;
+            bottom: 0;
+            top: 0;
+            width: 290px;}
+           .side-bars{
+            background-color: rgb(22, 21, 21);
+            position: fixed;
+            right: 0;
+            bottom: 0;
+            top: 0;
+            width: 100px;}
+
+
+            @media(max-width: 500px){
+    .container{
+        display: flex;
+    width: 300px;
+        object-fit: contain;
+        align-items: center;
+    }.side-bar{
+        width: 100px;
+    } .G-button{
+            
+            background-color:  rgb(195, 43, 226);
+            height: 60px;
+            width: 60px;
+            border: none;
+            border-radius: 7px;
+            color: beige;
+            font-size: bold;
+            font-size: 40px;
+        
+    
+            box-shadow: 3px 3px 3px gainsboro;
+            margin-top: 200px;
+         }.form{
+            
+         }.submit-button{
+            margin-right: 700px;
+            
+         }.duration{
+            margin-left: 700px;
+            
+
+         }
+
+        }
+
+
+
+
+            .e{
+                color: beige;
+                font-size: large;
+            }.h{
+                margin-left: 710px;
+                color: beige;
+            }
+</style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="header">
+                <div class="left-section">
+                 <div class="side-bar">
+                    <button class="G-button">G</button>
+                 </div>    
+                   
+                </div>
+                <div class="middle-section">
+        <h1 class="h">select payment duration</h1>
+            
+                <div class="right-section">
+            
+                <div class="side-bars"></div>
+                </div>
+                <div>
+                    <form class="form" action="/charge" method="post" id="payment-form"
+    >
+    
+        <div form action="/charge" method="post" id="payment-form">
+            <label class="duration" for="duration">
+                <b>SELECT DURATION:</b>
+        
+            </label>
+            <select class="d" id="duration" name="duration">
+                <option class="6-months" value="6-months" >
+                    <b>
+                        6-MONTHS (150U.S.D)
+                    </b>
+                </option>
+                <OPtion   class="value"   value="1 year"     >
+        <b>
+            1YEAR-(300U.S.D)
+        </b>
+                </OPtion>
+        
+            </select>
+        
+    
+        </form>
+    
+        
+    </div>
+    <div class="form-row">
+       
+        <label class="card" for="cardelement"> <b>
+            CREDIT OR DEBIT CARD
+        </b></label>
+    
+    <div>
+       <button class="submit-button" id="submit-button" >
+        <li>
+            <a class="e" href="/securepayment.html">
+                submit
+            </a>
+        </li>
+       </button> 
+    </div>
+        
+            </div>
+        
+        </div>
+                </div>
+        </div>
+        
+            <script>
+                const stripe =stripe('strip')
+                const paymentForm = document.getElementById
+                ('paymentform')
+                const durationselect = document.getElementById('durationselect')
+                paymentForm.addEventListener('submit',async (e) =>
+                {
+                    e.preventDefault();
+                    const duration =durationselect.value;
+                    const price =getprice(duration);
+                    try{
+                        const Response = await fetch('/create-payment-intent',{
+                            method:'post',
+                            headers:{
+                                'content-type':'application/json',
+                            },
+                            body: json.stringify({price}),
+                        });
+                        
+                    }
+                });
+const{clientsecret} =await Response.json();
+const result = await stripe.confirmcardpayment(clientsecret,
+   { payment_method:{
+        card:cardelement,
+    },
+   
+});
+if (result.error) //Handle error},
+else:{
+    //handle successful payment
+}catch(error:) {
+    //handle error
+}
+function getprice(duration){
+    switch(duration){
+        case '6-months':
+            return 150;
+            case '1-year':
+                return 300
+            
+    }
+}
+
+            </script>
+    </body>
+</html>

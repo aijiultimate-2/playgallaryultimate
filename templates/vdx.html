@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>playgallaryultimate</title>
+  <title>PlayGallery Ultimate</title>
   <style>
     body {
       background-color: black;
@@ -23,7 +23,6 @@
       background: black;
       border-radius: 20px;
       box-shadow: 0 8px 32px #000a;
-      position: relative;
       text-align: center;
     }
     .G-button {
@@ -35,7 +34,7 @@
       color: beige;
       font-size: 6rem;
       box-shadow: 3px 3px 3px gainsboro;
-      cursor: pointer;
+      cursor: default;
     }
     .H {
       color: beige;
@@ -52,12 +51,10 @@
   </div>   
 
   <script>
-    // Show intro for 5 seconds before redirect
+    // Use Flask url_for for correct redirection
     setTimeout(() => {
-      window.location.href = "video-gallary.html";
+      window.location.href = "{{ url_for('video_gallery') }}";
     }, 5000); 
   </script>
 </body>
 </html>
-
-      

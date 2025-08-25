@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Login - playgallaryultimate</title>
+  <title>Login - PlayGalleryUltimate</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     body {
@@ -89,17 +89,21 @@
   <div class="container">
     <h2>Login</h2>
     <div class="message" id="message"></div>
-    <form id="loginForm" autocomplete="off">
+
+    <!-- Use Flask route name for form action -->
+    <form id="loginForm" autocomplete="off" method="POST" action="{{ url_for('login_post') }}">
       <label for="email">Email</label>
       <input type="email" id="email" name="email" placeholder="Enter email" required>
       <label for="password">Password</label>
       <input type="password" id="password" name="password" placeholder="Enter password" required>
       <button type="submit">Login</button>
     </form>
+
     <div class="link">
-      <a href="create account.html">Don't have an account? Create one</a>
+      <a href="{{ url_for('create_account') }}">Don't have an account? Create one</a>
     </div>
   </div>
+
   <script>
     document.getElementById('loginForm').addEventListener('submit', async function(e) {
       e.preventDefault();
@@ -107,17 +111,19 @@
       const password = document.getElementById('password').value;
       const message = document.getElementById('message');
       message.textContent = '';
+
       try {
-        const res = await fetch('http://localhost:5000/api/login', {
+        const res = await fetch('{{ url_for("login_post") }}', {
           method: 'POST',
           headers: {'Content-Type': 'application/json'},
           body: JSON.stringify({ email, password })
         });
         const data = await res.json();
+
         if (res.ok) {
           message.style.color = '#4f4';
           message.textContent = 'Login successful! Redirecting...';
-          setTimeout(() => window.location.href = 'submit.html', 1200);
+          setTimeout(() => window.location.href = "{{ url_for('submit_page') }}", 1200);
         } else {
           message.style.color = '#f66';
           message.textContent = data.msg || 'Login failed.';
@@ -126,11 +132,6 @@
         message.style.color = '#f66';
         message.textContent = 'Network error. Please try again.';
       }
-      if (res.ok) {
-  message.style.color = '#4f4';
-  message.textContent = 'Login successful! Redirecting...';
-  setTimeout(() => window.location.href = 'submit.html', 1200);
-}
     });
   </script>
 </body>

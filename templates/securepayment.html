@@ -23,7 +23,6 @@
       background: rgba(34, 34, 34, 0.98);
       border-radius: 20px;
       box-shadow: 0 8px 32px #000a;
-      position: relative;
     }
     h2 {
       text-align: center;
@@ -78,7 +77,6 @@
     }
     button:hover {
       background: linear-gradient(90deg, #ff9800 0%, #c32be2 100%);
-      color: #ffe;
       transform: translateY(-2px) scale(1.03);
     }
     .message {
@@ -144,7 +142,7 @@
       let handler = PaystackPop.setup({
         key: "pk_test_YOUR_PUBLIC_KEY", // replace with your Paystack public key
         email: email,
-        amount: Math.round(amount * 150), // Paystack uses kobo/cents
+        amount: Math.round(amount * 100), // Paystack uses kobo/cents
         currency: "USD", // 👈 Important: set currency to USD
         ref: "PGU-" + Math.floor((Math.random() * 1000000000) + 1), // unique ref
         metadata: {
