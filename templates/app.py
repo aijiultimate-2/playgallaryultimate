@@ -1,22 +1,23 @@
 import os, requests
-from flask import Flask, request, render_template, jsonify, redirect, url_for, send_from_directory
+from flask import Flask, request, jsonify, send_from_directory, redirect
 from werkzeug.utils import secure_filename
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 
 # ---------- CONFIG ----------
 UPLOAD_FOLDER = "videos"
+PROTECTED_FOLDER = "protected_videos"
 ALLOWED_EXTENSIONS = {"mp4", "webm", "ogg"}
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+os.makedirs(PROTECTED_FOLDER, exist_ok=True)
 
-app = Flask(__name__, static_folder="static", template_folder="templates")
+app = Flask(__name__, static_folder="static", template_folder=None)  # No templates folder
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = os.environ.get('FLASK_SECRET', 'dev-secret')
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 
 db = SQLAlchemy(app)
-
 PAYSTACK_SECRET_KEY = os.environ.get("PAYSTACK_SECRET_KEY")
 
 # ---------- MODELS ----------
@@ -49,18 +50,28 @@ VIDEOS = [
 def allowed_file(filename):
     return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
 
-# ---------- ROUTES ----------
+# ---------- ROUTES FOR HTML FILES ----------
+# Assume HTML files are in project root or "static_html"
+HTML_DIR = os.path.join(os.path.dirname(__file__), "static_html")
+os.makedirs(HTML_DIR, exist_ok=True)
 
-# Landing = intro.html (redirects to website.html after 5s)
 @app.route('/')
 def intro():
-    return render_template("intro.html")
+    return send_from_directory(HTML_DIR, "intro.html")
 
 @app.route('/website')
 def website():
-    return render_template("website.html")
+    return send_from_directory(HTML_DIR, "website.html")
 
-# --- Upload videos ---
+# Serve other HTML pages dynamically if needed
+@app.route('/<page_name>.html')
+def serve_page(page_name):
+    file_path = f"{page_name}.html"
+    if os.path.exists(os.path.join(HTML_DIR, file_path)):
+        return send_from_directory(HTML_DIR, file_path)
+    return "Page not found", 404
+
+# ---------- VIDEO UPLOAD ----------
 @app.route('/api/upload', methods=['POST'])
 def upload_video():
     file = request.files.get("file")
@@ -77,7 +88,7 @@ def upload_video():
 def serve_video(filename):
     return send_from_directory(app.config["UPLOAD_FOLDER"], filename)
 
-# --- Paystack Checkout ---
+# ---------- PAYSTACK ----------
 @app.route("/paystack/init", methods=["POST"])
 def paystack_init():
     data = request.json
@@ -113,17 +124,17 @@ def paystack_callback():
     res = r.json()
     if res.get("status") and res["data"]["status"] == "success":
         data = res["data"]
-        p = Purchase(video_id="vid1",  # TODO: map correctly
+        p = Purchase(video_id="vid1",
                      customer_email=data["customer"]["email"],
                      reference=ref,
                      amount=data["amount"],
                      currency=data["currency"])
         db.session.add(p)
         db.session.commit()
-        return render_template("success.html")
-    return render_template("cancel.html")
+        return send_from_directory(HTML_DIR, "success.html")
+    return send_from_directory(HTML_DIR, "cancel.html")
 
-# --- Comments ---
+# ---------- COMMENTS ----------
 @app.route("/comments/<video_id>", methods=["GET"])
 def get_comments(video_id):
     comments = Comment.query.filter_by(video_id=video_id).order_by(Comment.created_at.desc()).all()
@@ -142,7 +153,7 @@ def add_comment(video_id):
     db.session.commit()
     return jsonify({"msg": "Comment added"}), 201
 
-# --- Protected video ---
+# ---------- PROTECTED VIDEOS ----------
 @app.route("/video/<video_id>")
 def serve_protected(video_id):
     email = request.args.get("email")
@@ -152,27 +163,8 @@ def serve_protected(video_id):
     if not purchase:
         return "No purchase found", 403
     video = next((v for v in VIDEOS if v["id"] == video_id), None)
-    return send_from_directory("protected_videos", video["filename"])
-
-# ---------- AUTO ROUTES FOR OTHER HTML PAGES ----------
-TEMPLATE_DIR = os.path.join(os.path.dirname(__file__), "templates")
-
-for filename in os.listdir(TEMPLATE_DIR):
-    if filename.endswith(".html"):
-        page_name = filename[:-5]
-        if page_name in ["intro", "website"]:  # already handled
-            continue
-        route_path = f"/{page_name}"
-
-        def make_route(name):
-            def route():
-                return render_template(f"{name}.html")
-            return route
-
-        if page_name not in app.view_functions:
-            app.add_url_rule(route_path, page_name, make_route(page_name))
+    return send_from_directory(PROTECTED_FOLDER, video["filename"])
 
 # ---------- MAIN ----------
 if __name__ == "__main__":
-    # Fly.io expects apps to bind to 0.0.0.0:8080
     app.run(debug=True, host="0.0.0.0", port=int(os.environ.get("PORT", 8080)))

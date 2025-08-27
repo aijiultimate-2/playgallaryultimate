@@ -114,7 +114,7 @@
         if (res.ok) {
           message.style.color = '#4f4';
           message.textContent = 'Video uploaded successfully! Redirecting...';
-          setTimeout(() => window.location.href = "{{ url_for('video_gallery') }}", 1200);
+          setTimeout(() => window.location.href = "success.html", 1200);
         } else {
           message.style.color = '#f66';
           message.textContent = data.msg || 'Video upload failed.';
