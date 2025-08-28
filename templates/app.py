@@ -1,5 +1,6 @@
-import os, requests
-from flask import Flask, request, jsonify, send_from_directory, redirect
+import os
+import requests
+from flask import Flask, request, jsonify, send_from_directory
 from werkzeug.utils import secure_filename
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
@@ -8,10 +9,15 @@ from datetime import datetime
 UPLOAD_FOLDER = "videos"
 PROTECTED_FOLDER = "protected_videos"
 ALLOWED_EXTENSIONS = {"mp4", "webm", "ogg"}
+HTML_DIR = os.path.join(os.path.dirname(__file__), "static_html")  # HTML folder
+
+# Ensure folders exist
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 os.makedirs(PROTECTED_FOLDER, exist_ok=True)
+os.makedirs(HTML_DIR, exist_ok=True)
 
-app = Flask(__name__, static_folder="static", template_folder=None)  # No templates folder
+# Flask app
+app = Flask(__name__, static_folder="static", template_folder=None)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = os.environ.get('FLASK_SECRET', 'dev-secret')
@@ -50,11 +56,7 @@ VIDEOS = [
 def allowed_file(filename):
     return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
 
-# ---------- ROUTES FOR HTML FILES ----------
-# Assume HTML files are in project root or "static_html"
-HTML_DIR = os.path.join(os.path.dirname(__file__), "static_html")
-os.makedirs(HTML_DIR, exist_ok=True)
-
+# ---------- HTML ROUTES ----------
 @app.route('/')
 def intro():
     return send_from_directory(HTML_DIR, "intro.html")
@@ -63,7 +65,6 @@ def intro():
 def website():
     return send_from_directory(HTML_DIR, "website.html")
 
-# Serve other HTML pages dynamically if needed
 @app.route('/<page_name>.html')
 def serve_page(page_name):
     file_path = f"{page_name}.html"
@@ -79,7 +80,6 @@ def upload_video():
         return jsonify({"msg": "No file"}), 400
     if not allowed_file(file.filename):
         return jsonify({"msg": "Invalid type"}), 400
-
     filename = secure_filename(file.filename)
     file.save(os.path.join(app.config["UPLOAD_FOLDER"], filename))
     return jsonify({"msg": "Uploaded", "url": f"/videos/{filename}"}), 201
@@ -118,7 +118,6 @@ def paystack_callback():
     ref = request.args.get("reference")
     if not ref:
         return "No reference", 400
-
     headers = {"Authorization": f"Bearer {PAYSTACK_SECRET_KEY}"}
     r = requests.get(f"https://api.paystack.co/transaction/verify/{ref}", headers=headers)
     res = r.json()
