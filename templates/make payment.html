@@ -145,32 +145,30 @@
         <form id="payment-form" action="{{ url_for('charge') }}" method="post">
             <label for="duration">Select Duration:</label>
             <select class="duration-select" id="duration" name="duration">
-                <option value="6-months">6 Months - $150 USD</option>
-                <option value="1-year">1 Year - $300 USD</option>
+                <option value="6-months">6 Months - $5.6 USD</option>
+                <option value="1-year">1 Year - $10 USD</option>
             </select>
 
-            <p id="price-display">Price: $150 USD</p>
+            <p id="price-display">Price: $5.6 USD</p>
 
             <button class="submit-button" type="submit">Pay Now</button>
         </form>
 
         <div class="link" style="text-align:center; margin-top:20px;">
-            <a href="{{ url_for('secure_payment') }}" style="color:orange; font-weight:bold;">Go to Secure Payment Page</a>
+            <a href="securepayment.html" style="color:orange; font-weight:bold;">Go to Secure Payment Page</a>
         </div>
     </div>
 
     <script>
-        // Sidebar toggle
-        function toggleSidebar() {
+       function toggleSidebar() {
             document.getElementById("sidebar").classList.toggle("show");
         }
 
-        // Price change logic
         const durationSelect = document.getElementById("duration");
         const priceDisplay = document.getElementById("price-display");
 
         durationSelect.addEventListener("change", () => {
-            let price = (durationSelect.value === "6-months") ? 150 : 300;
+            let price = (durationSelect.value === "6-months") ? 5.6 : 10;
             priceDisplay.textContent = `Price: $${price} USD`;
         });
     </script>

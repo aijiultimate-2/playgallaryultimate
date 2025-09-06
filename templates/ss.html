@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VistaGameHub</title>
+  <style>
+    /* Global Reset */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      scroll-behavior: smooth;
+      background: #111;
+      color: #fff;
+    }
+
+    /* Header */
+    .header {
+      width: 100%;
+      position: fixed;
+      height: 70px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      top: 0;
+      left: 0;
+      background: rgba(0, 0, 0, 0.95);
+      border-bottom: 2px solid rgb(153, 0, 255);
+      z-index: 1000;
+      padding: 0 40px;
+    }
+    .logo {
+      font-size: 22px;
+      font-weight: bold;
+      color: orange;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+    .nav-links {
+      display: flex;
+      gap: 30px;
+      align-items: center;
+    }
+    .nav-links a {
+      color: #fff;
+      text-decoration: none;
+      font-size: 16px;
+      transition: color 0.3s;
+    }
+    .nav-links a:hover {
+      color: orange;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      background-color: #382603;
+      position: fixed;
+      left: -260px;
+      top: 0;
+      height: 100%;
+      width: 260px;
+      padding-top: 80px;
+      transition: left 0.4s ease;
+      box-shadow: 4px 0 15px rgba(0,0,0,0.7);
+      z-index: 999;
+    }
+    .sidebar.show { left: 0; }
+    .sidebar a {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 15px 25px;
+      color: #ccc;
+      text-decoration: none;
+      font-size: 16px;
+      transition: background 0.3s, color 0.3s;
+    }
+    .sidebar a:hover { background-color: orange; color: #fff; }
+
+    .toggle-btn {
+      position: fixed;
+      top: 15px;
+      right: 20px;
+      background: linear-gradient(90deg, #ff8c00, #ffb347);
+      color: white;
+      font-size: 18px;
+      padding: 10px 18px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      box-shadow: 3px 3px 10px rgba(0,0,0,0.6);
+      z-index: 1001;
+    }
+    .toggle-btn:hover { opacity: 0.9; }
+
+    /* Slideshow Hero */
+    .slideshow {
+      position: relative;
+      height: 100vh;
+      overflow: hidden;
+      margin-top: 70px; /* push down from fixed header */
+    }
+    .slideshow-container {
+      height: 100%;
+      position: relative;
+    }
+    .slide {
+      display: none;
+      height: 100%;
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%;
+    }
+    .slide.active {
+      display: block;
+      animation: fade 1.5s;
+    }
+    .slide img, .slide video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .hero-content {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      z-index: 2;
+      color: #fff;
+    }
+    .hero-content h1 { font-size: 3.5rem; color: rgb(17, 0, 255); margin-bottom: 20px; }
+    .hero-content p { font-size: 1.3rem; margin-bottom: 25px; }
+    .hero-content button {
+      margin: 5px;
+      padding: 15px 30px;
+      border: none;
+      border-radius: 8px;
+      font-size: 18px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    .hero-content button:hover { transform: scale(1.1); }
+    .hero-content button:first-of-type { background: orange; color: #111; }
+    .hero-content button:last-of-type { background: #2196f3; color: #fff; }
+
+    /* Dots */
+    .dots {
+      position: absolute;
+      bottom: 20px;
+      width: 100%;
+      text-align: center;
+      z-index: 5;
+    }
+    .dot {
+      height: 15px; width: 15px;
+      margin: 0 5px;
+      background-color: #bbb;
+      border-radius: 50%;
+      display: inline-block;
+      cursor: pointer;
+    }
+    .dot.active { background-color: orange; }
+
+    @keyframes fade {
+      from { opacity: 0.4; }
+      to { opacity: 1; }
+    }
+
+    /* Features */
+    .features {
+      padding: 80px 20px;
+      background: #1c1c1c;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 30px;
+      text-align: center;
+    }
+    .feature {
+      background: #222;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+      transition: transform 0.3s;
+    }
+    .feature:hover { transform: translateY(-10px); }
+    .feature img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      border-radius: 10px;
+      margin-bottom: 15px;
+    }
+    .feature h3 { margin: 10px 0; color: orange; }
+
+    /* Testimonials */
+    .testimonials {
+      padding: 70px 20px;
+      background: #111;
+      text-align: center;
+    }
+    .testimonial {
+      max-width: 700px;
+      margin: auto;
+      font-style: italic;
+      font-size: 18px;
+      color: #ccc;
+    }@media (max-width: 700px) {
+      .left-section { width: 100px; }
+      .searchbar { width: 70px; }
+    }
+    .testimonial strong { color: orange; }
+
+    /* Newsletter */
+    .newsletter {
+      padding: 60px 20px;
+      background: #1c1c1c;
+      text-align: center;
+    }
+    .newsletter input {
+      padding: 12px;
+      border: none;
+      border-radius: 6px;
+      width: 250px;
+      margin-right: 10px;
+      margin-top: 20px;
+    }
+    .newsletter button {
+      padding: 12px 20px;
+      border: none;
+      border-radius: 6px;
+      background: orange;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 20px;
+    }
+
+    /* Footer */
+    footer {
+      background: #111;
+      color: #888;
+      text-align: center;
+      padding: 30px 10px;
+      font-size: 14px;
+      border-top: 2px solid orange;
+    }.left-section { display: flex; align-items: center; gap: 15px; }
+    .G-button, .ultimate-button, .ultimate {
+      background-color: rgb(114, 19, 177); color: beige;
+      border: none; border-radius: 7px;
+      box-shadow: 3px 3px 3px gainsboro;
+      cursor: pointer; font-weight: bold;
+    }
+    .G-button { height: 50px; width: 50px; font-size: 2rem; }
+    .ultimate-button { height: 40px; width: 60px; }
+    .ultimate { height: 40px; width: 60px; margin-right: 20px; padding-right: 30px; }
+     .middle-section { display: flex; align-items: center; gap: 10px; }
+    .searchbar {
+      background-color: transparent; border: 1px solid beige;
+      color: beige; height: 40px; width: 220px;
+      border-radius: 15px; padding-left: 10px;
+      box-shadow: 3px 3px 3px ghostwhite; font-size: 1rem;
+    }
+    .searchbar::placeholder { color: #bfa; opacity: 0.7; }
+    .container {
+      max-width: 900px; margin: 120px auto 0 auto;
+      padding: 24px; background: #232323;
+      border-radius: 16px; box-shadow: 0 4px 24px #0008;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <div class="header">
+   <div class="left-section">
+    <img src="def.png" alt="def" style="width: 50px;">
+  </div>
+  <div class="middle-section">
+    <input class="searchbar" type="text" placeholder="search" id="search">
+    <button class="ultimate-button">Ultimate</button>
+  </div>
+  <div class="left-section">
+    <button class="toggle-btn" onclick="toggleSidebar()">Home</button>
+  </div>
+  </div>
+
+  <!-- Sidebar -->
+  <div class="sidebar" id="sidebar">
+      <a href="create account.html">Create Account👍</a>
+  <a href="help.html">Help</a>
+  <a href="about playgallaryultimate.html">About VistaGameHub Ultimate 🎮</a>
+  <a href="log-in.html">Login ✅</a>
+  <a href="vdx.html">Video Gallary⚡</a>
+  </div>
+  
+  <!-- Hero Slideshow -->
+  <section class="slideshow">
+    <div class="slideshow-container">
+
+      <!-- Slide 1 -->
+      <div class="slide fade active">
+        <img src="file_0000000008986243aa02c508440f16cd.png" alt="Comic Burst">
+        <div class="hero-content">
+          <h1>ENJOY THE WORLD OF GAMING</h1>
+          <p>coming soon</p>
+          <p>Alien Warfare is a high-octane, sci-fi action game where players engage in fierce gunfights against hordes of terrifying extraterrestrials. Equipped with advanced weapons and armor, your mission is to reclaim the Earth from the alien threat.</p>
+  
+          <button onclick="window.location.href='w.html'">play now</button>
+          <button onclick="window.location.href='vdx.html'" style="background:#4d2dc2; color:#fff;">videos</button>
+        </div>
+      </div>
+
+      <!-- Slide 2 -->
+      <div class="slide fade">
+        <img src="ce.png.png" alt="Fantasy">
+        <div class="hero-content">
+          <h1>start your gaming career</h1>
+          <p>click the play now button to try this game</p>
+          <button onclick="window.location.href='w.html'">play now</button>
+          <button onclick="window.location.href='video-gallary.html'" style="background:#2136f3; color:#fff;">videos</button>
+        </div>
+      </div>
+
+      <!-- Slide 3 -->
+      <div class="slide fade">
+        <video autoplay muted loop>
+          <source src="game_trailer.mp4" type="video/mp4">
+        </video>
+        <div class="hero-content">
+          <h1>start advertising your games on playgallaryultimate</h1>
+          <p>become a game expert</p>
+          <button onclick="window.location.href='w.html'">play now</button>
+          <button onclick="window.location.href='video-gallary.html'" style="background:#4121f3; color:#fff;">videos</button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Navigation dots -->
+    <div class="dots">
+      <span class="dot active" onclick="currentSlide(0)"></span>
+      <span class="dot" onclick="currentSlide(1)"></span>
+      <span class="dot" onclick="currentSlide(2)"></span>
+    </div>
+  </section>
+
+  <!-- Features -->
+  
+  <section class="features">
+     <h1 style="color: rgb(255, 174, 0);padding: 20px;">ALL THIS GAMES ARE STILL UNDER DEVELOPMENT COMMING SOON WE HOPE YOU ENJOY IT WHEN IT WILL BE OUT DON'T MISS THIS MOMENT</h1>
+    <div class="feature">
+      <img src="re.png.png" alt="Comic Art">
+      <h3>comming soon</h3>
+      <p>create the passion for gaming.</p>
+    </div>
+    <div class="feature">
+      <img src="file_0000000008986243aa02c508440f16cd.png" alt="World">
+      <h3>Fantasy Worlds</h3>
+      <p>bild a passion for gaming.</p>
+    </div>
+    <div class="feature">
+      <img src="ce.png.png" alt="Community">
+      <h3>Join the Community</h3>
+      <p>Connect with fans, and friends to play games.</p>
+    </div>
+  </section>
+
+  <!-- Testimonials -->
+  <section class="testimonials">
+    <p class="testimonial">"Gaming has always been my passion and it will always be" <br><strong>-williams smith,game freak</strong></p>
+  </section>
+
+  <!-- Newsletter -->
+  <section class="newsletter" >
+    <h2 style="margin-top: 5px;">advertise yor games on playgallary</h2>
+    <p></p>
+    
+    <button onclick="window.location.href='create account.html'">create account</button>
+    <input type="email" id="email" name="email" placeholder="Enter email" required style="border-radius: 8px;
+      border: 1px solid #c32be2;
+      background: #1f1c1c;
+      color: beige;
+      font-size: 1rem;
+      box-sizing: border-box;">
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <p>© 2025 ultimate all right reserved</p>
+  </footer>
+
+  <script>
+    function toggleSidebar() {
+      document.getElementById("sidebar").classList.toggle("show");
+    }
+
+    // Slideshow script
+    let slideIndex = 0;
+    const slides = document.querySelectorAll('.slide');
+    const dots = document.querySelectorAll('.dot');
+
+    function showSlide(n) {
+      slides.forEach((s, i) => {
+        s.classList.remove('active');
+        dots[i].classList.remove('active');
+      });
+      slides[n].classList.add('active');
+      dots[n].classList.add('active');
+      slideIndex = n;
+    }
+
+    function nextSlide() {
+      slideIndex = (slideIndex + 1) % slides.length;
+      showSlide(slideIndex);
+    }
+
+    function currentSlide(n) {
+      showSlide(n);
+    }
+
+    setInterval(nextSlide, 5000);
+    document.getElementById("search").addEventListener("input", function() {
+  const value = this.value.toLowerCase();
+  document.querySelectorAll(".container section, .container header").forEach(item => {
+    item.style.display = item.textContent.toLowerCase().includes(value) ? "" : "none";
+  });
+});
+  </script>
+</body>
+</html>

@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ultimate Gaming Hub</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Roboto', sans-serif;
+    }
+
+    body {
+      background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+      color: #fff;
+      overflow-x: hidden;
+    }
+
+    /* Navbar */
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 50px;
+      background: rgba(0,0,0,0.7);
+      position: fixed;
+      width: 100%;
+      z-index: 1000;
+    }
+
+    nav .logo {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 24px;
+      color: #ff4f00;
+      letter-spacing: 2px;
+    }
+
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 25px;
+    }
+
+    nav ul li a {
+      text-decoration: none;
+      color: #fff;
+      font-weight: 500;
+      transition: color 0.3s;
+    }
+
+    nav ul li a:hover {
+      color: #ff4f00;
+    }
+
+    /* Hero Section */
+    .hero {
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 0 20px;
+      background: url('https://images.unsplash.com/photo-1615396310008-bc3d58213c14?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w5NzI5NzB8MHwxfHNlYXJjaHwxfHxkYXRhJTIwZ2FtZXxlbnwwfHx8fDE2OTMzMTI3Nzd8&ixlib=rb-4.0.3&q=80&w=1920') no-repeat center center/cover;
+      position: relative;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: rgba(0,0,0,0.6);
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero h1 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 3rem;
+      margin-bottom: 20px;
+      color: #ff4f00;
+    }
+
+    .hero p {
+      font-size: 1.2rem;
+      margin-bottom: 30px;
+      max-width: 600px;
+    }
+
+    .hero .btn {
+      padding: 15px 30px;
+      background: #ff4f00;
+      color: #fff;
+      font-weight: bold;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s, transform 0.2s;
+    }
+
+    .hero .btn:hover {
+      background: #ff7515;
+      transform: scale(1.05);
+    }
+
+    /* Featured Games Section */
+    .section {
+      padding: 80px 50px;
+      text-align: center;
+    }
+
+    .section h2 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 2rem;
+      margin-bottom: 50px;
+      color: #ff4f00;
+    }
+
+    .games-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 30px;
+    }
+
+    .game-card {
+      background: rgba(255,255,255,0.05);
+      border: 2px solid #ff4f00;
+      border-radius: 12px;
+      overflow: hidden;
+      transition: transform 0.3s, box-shadow 0.3s;
+      cursor: pointer;
+    }
+
+    .game-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 15px 25px rgba(255,79,0,0.5);
+    }
+
+    .game-card img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+    }
+
+    .game-card .game-info {
+      padding: 15px;
+    }
+
+    .game-card .game-info h3 {
+      margin-bottom: 10px;
+      color: #ff4f00;
+    }
+
+    .game-card .game-info p {
+      font-size: 0.9rem;
+      color: #ccc;
+    }
+
+    /* Footer */
+    footer {
+      padding: 40px 50px;
+      text-align: center;
+      background: #111;
+      color: #aaa;
+    }
+
+    footer p {
+      margin-bottom: 10px;
+    }
+
+    footer a {
+      color: #ff4f00;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    footer a:hover {
+      text-decoration: underline;
+    }
+
+    @media (max-width: 768px) {
+      .hero h1 {
+        font-size: 2.2rem;
+      }
+      .hero p {
+        font-size: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <div class="logo">GAMEHUB</div>
+    <ul>
+      <li><a href="#featured">Games</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </nav>
+
+  <section class="hero">
+    <div class="hero-content">
+      <h1>Level Up Your Gaming</h1>
+      <p>Explore the best 3D games, discover amazing worlds, and connect with the ultimate gaming community.</p>
+      <button class="btn">Play Now</button>
+    </div>
+  </section>
+
+  <section class="section" id="featured">
+    <h2>Featured Games</h2>
+    <div class="games-grid">
+      <div class="game-card">
+        <img src="https://images.unsplash.com/photo-1604335399102-6d0e72f7d08c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w5NzI5NzB8MHwxfHNlYXJjaHwxfHxnYW1lJTIwc2NlbmV8ZW58MHx8fHwxNjkzMzEyOTky&ixlib=rb-4.0.3&q=80&w=400" alt="Game 1">
+        <div class="game-info">
+          <h3>Cyber Battle</h3>
+          <p>Enter a futuristic cyber world and dominate your enemies with advanced tech weapons.</p>
+        </div>
+      </div>
+      <div class="game-card">
+        <img src="https://images.unsplash.com/photo-1615144045415-1205b0a2a7e6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w5NzI5NzB8MHwxfHNlYXJjaHwxfHxnYW1lJTIwY2hhcmFjdGVyfGVufDB8fHx8MTY5MzMxMzAyMw&ixlib=rb-4.0.3&q=80&w=400" alt="Game 2">
+        <div class="game-info">
+          <h3>Dragon Realm</h3>
+          <p>Explore mythical lands and train your dragon to conquer dangerous foes.</p>
+        </div>
+      </div>
+      <div class="game-card">
+        <img src="https://images.unsplash.com/photo-1616461232843-cd622abcfed2?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w5NzI5NzB8MHwxfHNlYXJjaHwxfHxnYW1lJTIwdmlkZW98ZW58MHx8fHwxNjkzMzEzMDQ2&ixlib=rb-4.0.3&q=80&w=400" alt="Game 3">
+        <div class="game-info">
+          <h3>Space Odyssey</h3>
+          <p>Journey across the galaxy and face alien challenges in a stunning 3D environment.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="about">
+    <h2>About Us</h2>
+    <p>Ultimate Gaming Hub brings you the latest 3D games and a thriving community for gamers worldwide. Join, explore, and level up!</p>
+  </section>
+
+  <section class="section" id="contact">
+    <h2>Contact</h2>
+    <p>Email us at <a href="mailto:support@gamehub.com">support@gamehub.com</a> or connect with us on social media.</p>
+  </section>
+
+  <footer>
+    <p>&copy; 2025 Ultimate Gaming Hub. All rights reserved.</p>
+    <p>Follow us on <a href="#">Twitter</a> | <a href="#">Instagram</a> | <a href="#">Discord</a></p>
+  </footer>
+
+</body>
+</html>

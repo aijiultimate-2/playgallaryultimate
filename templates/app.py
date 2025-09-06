@@ -1,9 +1,9 @@
-import os
-import requests
-from flask import Flask, request, jsonify, send_from_directory
+import os, json, requests, uuid
+from flask import Flask, send_from_directory, request, session, redirect, send_file
 from werkzeug.utils import secure_filename
-from flask_sqlalchemy import SQLAlchemy
+from flask_mail import Mail, Message
 from datetime import datetime
+
 
 # ---------- CONFIG ----------
 UPLOAD_FOLDER = "videos"
@@ -26,6 +26,16 @@ app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 db = SQLAlchemy(app)
 PAYSTACK_SECRET_KEY = os.environ.get("PAYSTACK_SECRET_KEY")
 
+# ------------------ Mail Config ------------------
+app.config.update(
+    MAIL_SERVER="smtp.gmail.com",
+    MAIL_PORT=587,
+    MAIL_USE_TLS=True,
+    MAIL_USERNAME=os.environ.get("MAIL_USERNAME", "yourgmail@gmail.com"),
+    MAIL_PASSWORD=os.environ.get("MAIL_PASSWORD", "your-app-password"),
+    MAIL_DEFAULT_SENDER=("Ultimate .VistaGameHub", os.environ.get("MAIL_USERNAME", "yourgmail@gmail.com"))
+)
+mail = Mail(app)
 # ---------- MODELS ----------
 class Purchase(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -59,17 +69,17 @@ def allowed_file(filename):
 # ---------- HTML ROUTES ----------
 @app.route('/')
 def intro():
-    return send_from_directory(HTML_DIR, "intro.html")
+    return send_from_directory(CURRENT_FOLDER, "intro.html")
 
 @app.route('/website')
 def website():
-    return send_from_directory(HTML_DIR, "website.html")
+    return send_from_directory(CURRENT_FOLDER, "website.html")
 
 @app.route('/<page_name>.html')
 def serve_page(page_name):
     file_path = f"{page_name}.html"
-    if os.path.exists(os.path.join(HTML_DIR, file_path)):
-        return send_from_directory(HTML_DIR, file_path)
+    if os.path.exists(os.path.join(CURRENT_FOLDER, file_path)):
+        return send_from_directory(CURRENT_FOLDER, file_path)
     return "Page not found", 404
 
 # ---------- VIDEO UPLOAD ----------
@@ -104,7 +114,7 @@ def paystack_init():
     headers = {"Authorization": f"Bearer {PAYSTACK_SECRET_KEY}"}
     payload = {
         "email": email,
-        "amount": video["price_kobo"],
+        "amount": video["price_dollar"],
         "callback_url": request.host_url + "paystack/callback"
     }
     r = requests.post("https://api.paystack.co/transaction/initialize", json=payload, headers=headers)
@@ -130,8 +140,8 @@ def paystack_callback():
                      currency=data["currency"])
         db.session.add(p)
         db.session.commit()
-        return send_from_directory(HTML_DIR, "success.html")
-    return send_from_directory(HTML_DIR, "cancel.html")
+        return send_from_directory(CURRENT_FOLDER, "success.html")
+    return send_from_directory(CURRENT_FOLDER, "cancel.html")
 
 # ---------- COMMENTS ----------
 @app.route("/comments/<video_id>", methods=["GET"])
@@ -151,6 +161,62 @@ def add_comment(video_id):
     db.session.add(c)
     db.session.commit()
     return jsonify({"msg": "Comment added"}), 201
+    # ------------------ Signup (Create Account) ------------------
+@app.route("/create", methods=["POST"])
+def create_account():
+    data = request.get_json()
+    username = data.get("username")
+    password = data.get("password")
+    email = data.get("email")
+    reference = data.get("ref")
+
+    if not all([username, password, email, reference]):
+        return {"msg": "Missing fields"}, 400
+
+    users = load_users()
+    if username in users:
+        return {"msg": "User already exists"}, 400
+# Save user with verification token
+    token = str(uuid.uuid4())
+    users[username] = {"password": password, "email": email, "verified": False, "token": token}
+    save_users(users)
+
+    verify_url = f"http://127.0.0.1:5000/verify/{token}"
+    msg = Message("Verify your account", recipients=[email])
+    msg.body = f"Hello {username},\nPlease verify your account: {verify_url}"
+    mail.send(msg)
+
+    return {"msg": "Account created. Check your email to verify."}
+ # ------------------ Verify Email ------------------
+@app.route("/verify/<token>")
+def verify_email(token):
+    users = load_users()
+    for username, info in users.items():
+        if info.get("token") == token:
+            users[username]["verified"] = True
+            save_users(users)
+            return f"✅ {username}, your email verified! <a href='/signin.html'>Login</a>"
+    return "Invalid or expired token", 400
+   
+# ------------------ Login ------------------
+@app.route("/log-in", methods=["POST"])
+def login_post():
+    data = request.get_json()
+    email = data.get("email")
+    password = data.get("password")
+
+    users = load_users()
+    for username, info in users.items():
+        if info["email"] == email and info["password"] == password:
+            if not info["verified"]:
+                return {"msg": "Please verify your email first"}, 403
+            session["user"] = username
+            return {"msg": "Login successful"}
+    return {"msg": "Invalid credentials"}, 401
+@app.route("/logout")
+def logout():
+    session.pop("user", None)
+    return redirect("/log-in.html")
 
 # ---------- PROTECTED VIDEOS ----------
 @app.route("/video/<video_id>")
@@ -166,4 +232,4 @@ def serve_protected(video_id):
 
 # ---------- MAIN ----------
 if __name__ == "__main__":
-    app.run(debug=True, host="0.0.0.0", port=int(os.environ.get("PORT", 8080)))
+    app.run(debug=True, host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))

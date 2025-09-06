@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PlayGallery Ultimate</title>
+  <title>playgallaryultimate</title>
   <style>
     body {
       background-color: black;
@@ -23,6 +23,7 @@
       background: black;
       border-radius: 20px;
       box-shadow: 0 8px 32px #000a;
+      position: relative;
       text-align: center;
     }
     .G-button {
@@ -34,7 +35,7 @@
       color: beige;
       font-size: 6rem;
       box-shadow: 3px 3px 3px gainsboro;
-      cursor: default;
+      cursor: pointer;
     }
     .H {
       color: beige;
@@ -43,18 +44,18 @@
 </head>
 <body>
   <div class="container" id="intro">
-    <button class="G-button">G</button>
-    <div class="H">
-      <p>playgallary</p>
-      <h1>.ultimate</h1>
+    <img src="def.png" alt="def" style="width: 50px;">
+    <p>VistaGameHub</p>
+    <h1 style="margin-top: 200px;">Ultimate</h1>
     </div>
+    
   </div>   
 
   <script>
-    // Use Flask url_for for correct redirection
+    // Redirect using Flask route (not static HTML file)
     setTimeout(() => {
-      window.location.href = "video-gallery.html";
-    }, 5000); 
+      window.location.href = "video-gallary.html";
+    }, 10000);
   </script>
 </body>
 </html>
