@@ -115,7 +115,7 @@
   const message = document.getElementById('message');
   message.textContent = '';
   try {
-    const res = await fetch("/create.html", {
+    const res = await fetch("/create", {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({ username, email, password })

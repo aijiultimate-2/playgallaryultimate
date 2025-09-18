@@ -265,7 +265,7 @@
       max-width: 900px; margin: 120px auto 0 auto;
       padding: 24px; background: #232323;
       border-radius: 16px; box-shadow: 0 4px 24px #0008;
-    }
+    }.ads { max-width: 728px; width: 90%; margin: 2rem auto; text-align: center; padding: 1rem; border-radius: 12px; background: #fafafa; display: none; }
   </style>
 </head>
 <body>
@@ -276,8 +276,8 @@
     <img src="def.png" alt="def" style="width: 50px;">
   </div>
   <div class="middle-section">
-    <input class="searchbar" type="text" placeholder="search" id="search">
-    <button class="ultimate-button">Ultimate</button>
+    <input class="searchbar" type="text" placeholder="⚡Ask ultimate AI Anything?" id="search">
+    <button class="ultimate-button"onclick="window.location.href='Website.html' ">Ultimate</button>
   </div>
   <div class="left-section">
     <button class="toggle-btn" onclick="toggleSidebar()">Home</button>
@@ -305,18 +305,18 @@
           <p>coming soon</p>
           <p>Alien Warfare is a high-octane, sci-fi action game where players engage in fierce gunfights against hordes of terrifying extraterrestrials. Equipped with advanced weapons and armor, your mission is to reclaim the Earth from the alien threat.</p>
   
-          <button onclick="window.location.href='w.html'">play now</button>
+          <button onclick="window.location.href='download.html'">Download</button>
           <button onclick="window.location.href='vdx.html'" style="background:#4d2dc2; color:#fff;">videos</button>
         </div>
       </div>
 
       <!-- Slide 2 -->
       <div class="slide fade">
-        <img src="ce.png.png" alt="Fantasy">
+        <img src="re.png.png" alt="Fantasy">
         <div class="hero-content">
           <h1>start your gaming career</h1>
           <p>click the play now button to try this game</p>
-          <button onclick="window.location.href='w.html'">play now</button>
+          <button onclick="window.location.href='download.html'">Download</button>
           <button onclick="window.location.href='video-gallary.html'" style="background:#2136f3; color:#fff;">videos</button>
         </div>
       </div>
@@ -324,7 +324,7 @@
       <!-- Slide 3 -->
       <div class="slide fade">
         <video autoplay muted loop>
-          <source src="game_trailer.mp4" type="video/mp4">
+          <source src="6498517-uhd_2160_3840_25fps.mp4" type="video/mp4">
         </video>
         <div class="hero-content">
           <h1>start advertising your games on playgallaryultimate</h1>
@@ -372,7 +372,7 @@
 
   <!-- Newsletter -->
   <section class="newsletter" >
-    <h2 style="margin-top: 5px;">advertise yor games on playgallary</h2>
+    <h2 style="margin-top: 5px;">advertise yor games on VistaGameHub</h2>
     <p></p>
     
     <button onclick="window.location.href='create account.html'">create account</button>
@@ -383,7 +383,9 @@
       font-size: 1rem;
       box-sizing: border-box;">
   </section>
-
+  <div class="ads" id="ads">
+    <!-- Paste your AdSense code here -->
+  </div>
   <!-- Footer -->
   <footer>
     <p>© 2025 ultimate all right reserved</p>
@@ -418,7 +420,7 @@
       showSlide(n);
     }
 
-    setInterval(nextSlide, 5000);
+    setInterval(nextSlide, 8000);
     document.getElementById("search").addEventListener("input", function() {
   const value = this.value.toLowerCase();
   document.querySelectorAll(".container section, .container header").forEach(item => {

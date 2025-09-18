@@ -2,139 +2,82 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>PlayGallery Ultimate</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title> VistaGameHub</title>
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#4f46e5">
   <style>
-    html, body {
-      margin: 0; padding: 0;
-      font-family: 'Segoe UI', Arial, sans-serif;
-      background: #181818; color: #f5f5f5;
-      min-height: 100vh;
-    }
-    .header {
-      width: 100%; position: fixed; height: 70px;
-      display: flex; align-items: center; justify-content: space-between;
-      top: 0; left: 0;
-      background: #232323; border-bottom: 2px solid beige;
-      z-index: 100; padding: 0 10px;
-    }
-    .left-section { display: flex; align-items: center; gap: 15px; }
-    .G-button, .ultimate-button, .ultimate {
-      background-color: rgb(195, 43, 226); color: beige;
-      border: none; border-radius: 7px;
-      box-shadow: 3px 3px 3px gainsboro;
-      cursor: pointer; font-weight: bold;
-    }
-    .G-button { height: 50px; width: 50px; font-size: 2rem; }
-    .ultimate-button { height: 40px; width: 80px; }
-    .ultimate { height: 40px; width: 60px; margin-right: 20px; padding-right: 30px; }
-    .sidebar {
-      height: 100%; width: 0; position: fixed; top: 0; left: 0;
-      background: linear-gradient(180deg, #352702, #ff9800);
-      overflow-x: hidden; transition: 0.4s;
-      padding-top: 70px; z-index: 200;
-    }
-    .sidebar a {
-      display: block; padding: 15px 25px;
-      text-decoration: none; font-size: 1.2rem;
-      color: #fff; transition: background 0.3s, padding-left 0.3s;
-    }
-    .sidebar a:hover { background: rgba(255, 255, 255, 0.2); padding-left: 35px; }
-    .middle-section { display: flex; align-items: center; gap: 10px; }
-    .searchbar {
-      background-color: transparent; border: 1px solid beige;
-      color: beige; height: 40px; width: 220px;
-      border-radius: 15px; padding-left: 10px;
-      box-shadow: 3px 3px 3px ghostwhite; font-size: 1rem;
-    }
-    .searchbar::placeholder { color: #bfa; opacity: 0.7; }
-    .container {
-      max-width: 900px; margin: 120px auto 0 auto;
-      padding: 24px; background: #232323;
-      border-radius: 16px; box-shadow: 0 4px 24px #0008;
-    }
-    img, video { max-width: 100%; height: auto; border-radius: 8px; display: block; margin: 0 auto 18px auto; }
-    .footer { text-align: center; padding: 24px 0 0 0; color: #888; font-size: 1rem; }
-    .btn {
-      height: 30px; width: 100px;
-      background-color: orange; color: beige;
-      border-radius: 5px; display: inline-block;
-      text-align: center; line-height: 30px;
-      text-decoration: none;
-    }
-    @media (max-width: 700px) {
-      .middle-section { flex-direction: column; gap: 5px; }
-      .searchbar { width: 100%; }
-    }
+    body { font-family: Arial, sans-serif; margin: 0; padding: 0; background: #111;
+      color: #fff; display: flex; flex-direction: column; align-items: center; }
+    header { width: 100%; padding: 1rem; background: #4f46e5; color: white; text-align: center; font-size: 1.5rem; font-weight: bold; }
+    .slideshow { max-width: 800px; width: 90%; height: 450px; margin: 2rem auto; position: relative; overflow: hidden; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
+    .slides { display: flex; width: 100%; height: 100%; transition: transform 0.8s ease-in-out; }
+    .slides img, .slides video { width: 100%; height: 100%; object-fit: cover; flex-shrink: 0; }
+    .controls { position: absolute; top: 50%; width: 100%; display: flex; justify-content: space-between; transform: translateY(-50%); }
+    .controls button { background: rgba(0,0,0,0.5); color: white; border: none; padding: 0.5rem 1rem; border-radius: 50%; cursor: pointer; }
+    .ai-agent { max-width: 600px; width: 90%; padding: 1.5rem; margin: 2rem auto; background-color: #382603; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+    .ai-agent h2 { margin-bottom: 1rem; }
+    .ai-agent input { width: 80%; padding: 0.5rem; background-color: transparent; border: 1px solid p;
+      color: beige;
+      border-radius: 15px;
+      box-shadow: 3px 3px 3px ghostwhite; font-size: 1rem; }
+    .ai-agent button { padding: 0.5rem 1rem; background: #4f46e5; color: white; border: none; border-radius: 6px; cursor: pointer; }
+    .ai-response { margin-top: 1rem; font-style: italic; }
+    .ads { max-width: 728px; width: 90%; margin: 2rem auto; text-align: center; padding: 1rem; border-radius: 12px; background: #fafafa; display: none; }
   </style>
 </head>
 <body>
+  <header>⚡ultimate AI </header>
 
-<div class="header">
-  <div class="left-section">
-    <button class="G-button">G</button>
+  <div class="slideshow">
+    <div class="slides" id="slides">
+      <video autoplay muted loop>
+        <source src="6498517-uhd_2160_3840_25fps.mp4" type="video/mp4">
+      </video>
+      <video autoplay muted loop>
+        <source src="3191572-uhd_3840_2160_25fps.mp4" type="video/mp4">
+      </video>
+      <video autoplay muted loop>
+        <source src="re.mp4" type="video/mp4">
+      </video>
+    </div>
+    <div class="controls">
+      <button onclick="prevSlide()">&#10094;</button>
+      <button onclick="nextSlide()">&#10095;</button>
+    </div>
   </div>
-  <div class="middle-section">
-    <input class="searchbar" type="text" placeholder="search" id="search">
-    <button class="ultimate-button">Ultimate</button>
+
+  <div class="ai-agent">
+    <h2>⚡Ask Me Anything?</h2>
+    <input type="text" id="query" placeholder="⚡Ask ultimate AI Anything?">
+    <button onclick="askAI()" style="width: 70px; height: 40px;">Ask</button>
+    <div class="ai-response" id="response"></div>
   </div>
-  <div class="left-section">
-    <button class="ultimate" onclick="toggleSidebar()">Home</button>
-  </div>
-</div>
 
-<!-- Sidebar -->
-<div id="mySidebar" class="sidebar">
-  <a href="create account.html">CREATE ACCOUNT</a>
-  <a href="help page.html">HELP</a>
-  <a href="about playgallaryultimate.html">ABOUT PLAYGALLERY ULTIMATE</a>
-  <a href="log-in.html">LOGIN</a>
-  <a href="vdx.html">VIDEO GALLERY</a>
-</div>
+  
 
-<div class="container">
-  <header>
-    <h1>Alien Warfare</h1>
-    <p>Join the elite strike force and battle against ruthless alien invaders. Survive the chaos. Defend Earth. Become the legend.</p>
-    <h2>Coming Soon</h2>
-  </header>
-  <section>
-    <h2>About the Game</h2>
-    <p>Alien Warfare is a high-octane, sci-fi action game where players engage in fierce gunfights against hordes of terrifying extraterrestrials. Equipped with advanced weapons and armor, your mission is to reclaim the Earth from the alien threat.</p>
-  </section>
-  <img src="file_0000000008986243aa02c508440f16cd.png" alt="Alien Warfare Cover">
-
-  <header>
-    <h1>Box Elimination</h1>
-    <h2>ENJOY</h2>
-    <a class="btn" href="w.html">PLAY NOW</a>
-  </header>
-  <section>
-    <h2>About the Game</h2>
-    <p>Box Elimination is a game in which the player shoots the boxes coming from above.</p>
-  </section>
-  <img src="DTA.png" alt="Box Elimination Cover">
-
-  <div class="footer">
-    &copy; 2025 playgallaryultimate studio. All rights reserved.<br>
-    <a href="mailto:playgallaryultimate@gmail.com" style="color:orange;">playgallaryultimate@gmail.com</a>
-  </div>
-</div>
-
-<script>
-function toggleSidebar() {
-  const sidebar = document.getElementById("mySidebar");
-  if (sidebar.style.width === "250px") sidebar.style.width = "0";
-  else sidebar.style.width = "250px";
-}
-
-document.getElementById("search").addEventListener("input", function() {
-  const value = this.value.toLowerCase();
-  document.querySelectorAll(".container section, .container header").forEach(item => {
-    item.style.display = item.textContent.toLowerCase().includes(value) ? "" : "none";
-  });
-});
-</script>
-
+  <script>
+    let currentIndex = 0;
+    const slides = document.getElementById("slides");
+    const total = slides.children.length;
+    function showSlide(index) { currentIndex = (index + total) % total; slides.style.transform = `translateX(-${currentIndex * 100}%)`; }
+    function nextSlide() { showSlide(currentIndex + 1); }
+    function prevSlide() { showSlide(currentIndex - 1); }
+    setInterval(nextSlide, 5000);
+    async function askAI() {
+      const query = document.getElementById("query").value;
+      const res = await fetch("/ask", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ query })
+      });
+      const data = await res.json();
+      document.getElementById("response").innerText = data.response;
+    }
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.register("/service-worker.js")
+        .then(reg => console.log("Service Worker registered:", reg.scope))
+        .catch(err => console.error("Service Worker failed:", err));
+    }
+  </script>
 </body>
 </html>

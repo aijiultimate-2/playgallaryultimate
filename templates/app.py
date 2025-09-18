@@ -60,20 +60,62 @@ with app.app_context():
 VIDEOS = [
     {"id": "vid1", "title": "Sample Video 1", "filename": "sample1.mp4", "price_kobo": 50000},
     {"id": "vid2", "title": "Sample Video 2", "filename": "sample2.mp4", "price_kobo": 80000},
-]
+]# Initialize OpenAI client
+client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
+
 
 # ---------- HELPERS ----------
 def allowed_file(filename):
     return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
+# --- Search Videos ---
+@app.route('/search', methods=['GET'])
+def search():
+    q = request.args.get('q', '').lower()
+    results = [v for v in videos if q in v['title'].lower() or q in v['description'].lower()]
+    return jsonify(results), 200
 
 # ---------- HTML ROUTES ----------
 @app.route('/')
 def intro():
     return send_from_directory(CURRENT_FOLDER, "intro.html")
 
-@app.route('/website')
+@app.route('/ss')
 def website():
-    return send_from_directory(CURRENT_FOLDER, "website.html")
+    return send_from_directory(CURRENT_FOLDER, "ss.html")
+# Serve manifest.json
+@app.route('/manifest.json')
+def manifest():
+    return send_from_directory( CURRENT_FOLDER,'static', 'manifest.json')
+
+# Serve service worker
+@app.route('/service-worker.js')
+def sw():
+    return send_from_directory(CURRENT_FOLDER,'static', 'service-worker.js')
+
+# AI Agent endpoint
+@app.route("/ask", methods=["POST"])
+def ask():
+    data = request.json
+    query = data.get("query", "")
+
+    if not query.strip():
+        return jsonify({"response": "⚠️ Please enter a question."})
+
+    try:
+        response = client.chat.completions.create(
+            model="gpt-4o-mini",
+            messages=[
+                {"role": "system", "content": "You are a helpful AI assistant."},
+                {"role": "user", "content": query}
+            ],
+            max_tokens=200
+        )
+        answer = response.choices[0].message.content
+        return jsonify({"response": answer})
+    except Exception as e:
+        return jsonify({"response": f"Error: {str(e)}"})
+
+
 
 @app.route('/<page_name>.html')
 def serve_page(page_name):
@@ -170,12 +212,10 @@ def create_account():
     email = data.get("email")
     reference = data.get("ref")
 
-    if not all([username, password, email, reference]):
+    if not all([username, password, email, ]):
         return {"msg": "Missing fields"}, 400
 
-    users = load_users()
-    if username in users:
-        return {"msg": "User already exists"}, 400
+   
 # Save user with verification token
     token = str(uuid.uuid4())
     users[username] = {"password": password, "email": email, "verified": False, "token": token}
