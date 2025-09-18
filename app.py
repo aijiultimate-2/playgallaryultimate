@@ -1,25 +1,25 @@
 import os, json, requests, uuid
-from flask import Flask, send_from_directory, request, session, redirect, send_file, jsonify
+from flask import Flask, render_template, send_from_directory, request, session, redirect, send_file, jsonify
 from werkzeug.utils import secure_filename
+from werkzeug.security import generate_password_hash, check_password_hash
 from flask_sqlalchemy import SQLAlchemy
+from flask_login import UserMixin
 from flask_mail import Mail, Message
 from datetime import datetime
 from openai import OpenAI
-
 
 # ---------- CONFIG ----------
 UPLOAD_FOLDER = "videos"
 PROTECTED_FOLDER = "protected_videos"
 ALLOWED_EXTENSIONS = {"mp4", "webm", "ogg"}
-# The HTML files are in the same directory as this app.py file.
-HTML_DIR = os.path.dirname(__file__)
 
 # Ensure folders exist
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 os.makedirs(PROTECTED_FOLDER, exist_ok=True)
 
 # Flask app
-app = Flask(__name__, static_folder="static", template_folder=None)
+# Use the 'templates' folder for HTML files, which is standard Flask practice.
+app = Flask(__name__, static_folder="static", template_folder="templates")
 # For local development, we use a simple SQLite database.
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'
 # For production on Render, you will use a PostgreSQL database.
@@ -64,6 +64,18 @@ class Comment(db.Model):
     content = db.Column(db.Text, nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
+class User(UserMixin, db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(80), unique=True, nullable=False)
+    email = db.Column(db.String(120), unique=True, nullable=False)
+    password_hash = db.Column(db.String(128))
+
+    def set_password(self, password):
+        self.password_hash = generate_password_hash(password)
+
+    def check_password(self, password):
+        return check_password_hash(self.password_hash, password)
+
 # Create database tables if they don't exist
 with app.app_context():
     db.create_all()
@@ -88,27 +100,27 @@ def search():
 # ---------- HTML ROUTES ----------
 @app.route('/')
 def intro():
-    return send_from_directory(HTML_DIR, "intro.html")
+    return render_template("intro.html")
 
 @app.route('/ss')
 def website():
-    return send_from_directory(HTML_DIR, "ss.html")
+    return render_template("ss.html")
 
 # Serve manifest.json and service-worker.js from the same directory as HTML files
 @app.route('/manifest.json')
 def manifest():
-    return send_from_directory(HTML_DIR, 'manifest.json')
+    return send_from_directory(app.template_folder, 'manifest.json')
 
 @app.route('/service-worker.js')
 def sw():
-    return send_from_directory(HTML_DIR, 'service-worker.js')
+    return send_from_directory(app.template_folder, 'service-worker.js')
 
 # Generic route to serve any .html file
 @app.route('/<page_name>.html')
 def serve_page(page_name):
     file_path = f"{page_name}.html"
-    if os.path.exists(os.path.join(HTML_DIR, file_path)):
-        return send_from_directory(HTML_DIR, file_path)
+    if os.path.exists(os.path.join(app.template_folder, file_path)):
+        return render_template(file_path)
     return "Page not found", 404
 
 # ---------- API ROUTES ----------
@@ -198,8 +210,8 @@ def paystack_callback():
                      currency=data["currency"])
         db.session.add(p)
         db.session.commit()
-        return send_from_directory(HTML_DIR, "success.html")
-    return send_from_directory(HTML_DIR, "cancel.html")
+        return render_template("success.html")
+    return render_template("cancel.html")
 
 # Comments
 @app.route("/comments/<video_id>", methods=["GET"])
