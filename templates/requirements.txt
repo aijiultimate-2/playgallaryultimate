@@ -21,3 +21,4 @@ requests==2.31.0
 
 # Deployment server
 gunicorn==20.1.0
+OPEN AI

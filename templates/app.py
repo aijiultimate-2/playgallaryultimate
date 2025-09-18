@@ -166,7 +166,13 @@ def paystack_init():
     payload = {
         "email": email,
         "amount": video["price_kobo"],  # Corrected from price_dollar
-        "callback_url": request.host_url + "paystack/callback"
+        "callback_url": request.host_url + "paystack/callback",
+        "metadata": {
+            "video_id": video_id,
+            "custom_fields": [
+                {"display_name": "Video Title", "variable_name": "video_title", "value": video['title']}
+            ]
+        }
     }
     r = requests.post("https://api.paystack.co/transaction/initialize", json=payload, headers=headers)
     res = r.json()
@@ -184,7 +190,8 @@ def paystack_callback():
     res = r.json()
     if res.get("status") and res["data"]["status"] == "success":
         data = res["data"]
-        p = Purchase(video_id="vid1",  # Note: This is hardcoded, should be dynamic
+        video_id_from_meta = data.get("metadata", {}).get("video_id", "unknown")
+        p = Purchase(video_id=video_id_from_meta,
                      customer_email=data["customer"]["email"],
                      reference=ref,
                      amount=data["amount"],
@@ -216,10 +223,22 @@ def add_comment(video_id):
 # It needs to be rewritten using a proper User model in the database with password hashing.
 # I have disabled it for now so the rest of your application can run.
 
+# This route is called by success.html to store the user's email after a purchase.
+@app.route("/set_email", methods=["POST"])
+def set_email():
+    data = request.get_json()
+    email = data.get("email")
+    if email:
+        session['customer_email'] = email
+        return jsonify({"msg": "Email set in session"}), 200
+    return jsonify({"error": "Email not provided"}), 400
+
 # Protected Videos
 @app.route("/video/<video_id>")
 def serve_protected(video_id):
-    email = request.args.get("email")
+    # Check the session for the email first, which is more secure.
+    # Fall back to a URL parameter if the session is not set.
+    email = session.get('customer_email') or request.args.get("email")
     if not email:
         return "Please provide your email address to access this video.", 403
     purchase = Purchase.query.filter_by(video_id=video_id, customer_email=email).first()
